@@ -1,0 +1,6 @@
+{
+  "short_name": "learningDev",
+  "name": "LearningDev",
+  "start_url": ".",
+  "display": "standalone"
+}
