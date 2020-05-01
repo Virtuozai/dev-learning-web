@@ -1,5 +1,7 @@
 import React, { FC } from 'react'
 
-const App: FC = () => <div>Hello</div>
+import { Header } from 'components/Header'
+
+const App: FC = () => <Header buttonText="I am button text" />
 
 export default App
