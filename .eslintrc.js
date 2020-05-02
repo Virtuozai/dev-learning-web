@@ -47,6 +47,8 @@ module.exports = {
     'jsx-a11y/no-static-element-interactions': 0,
     'jsx-a11y/click-events-have-key-events': 0,
     'react/no-unused-state': 0,
+    'arrow-parens': 0,
     'linebreak-style': ['error', process.platform === 'win32' ? 'windows' : 'unix'],
+    'react/no-unescaped-entities': 0,
   },
 }

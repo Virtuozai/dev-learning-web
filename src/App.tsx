@@ -1,7 +1,24 @@
 import React, { FC } from 'react'
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
+import { CssBaseline } from '@material-ui/core'
 
-import { Header } from 'components/Header'
+import { Header } from 'components'
+import { Login } from 'pages'
 
-const App: FC = () => <Header buttonText="I am button text" />
+import { LOGIN_PAGE, HOME } from 'constants/routes'
+
+const App: FC = () => (
+  <Router>
+    <CssBaseline />
+    <Switch>
+      <Route path={HOME} exact>
+        <Header buttonText="I am button text" />
+      </Route>
+      <Route path={LOGIN_PAGE} exact>
+        <Login />
+      </Route>
+    </Switch>
+  </Router>
+)
 
 export default App
