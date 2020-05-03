@@ -1,2 +1,5 @@
 export const HOME = '/'
 export const LOGIN_PAGE = '/login'
+export const CALENDAR = '/calendar'
+export const LEARNING = '/learning'
+export const PROFILE = '/profile'
