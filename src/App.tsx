@@ -6,6 +6,7 @@ import { Header } from 'components'
 import { Login } from 'pages'
 
 import { LOGIN_PAGE, HOME } from 'constants/routes'
+import ImageList from 'components/ImageList'
 
 const App: FC = () => (
   <Router>
@@ -13,6 +14,7 @@ const App: FC = () => (
     <Switch>
       <Route path={HOME} exact>
         <Header buttonText="I am button text" />
+        <ImageList />
       </Route>
       <Route path={LOGIN_PAGE} exact>
         <Login />
