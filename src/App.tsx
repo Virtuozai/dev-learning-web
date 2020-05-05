@@ -5,7 +5,8 @@ import { CssBaseline } from '@material-ui/core'
 import { Header, Navigation } from 'components'
 import { Login } from 'pages'
 
-import { LOGIN_PAGE, HOME } from 'constants/routes'
+import { LOGIN_PAGE, HOME, PROFILE } from 'constants/routes'
+import Profile from 'pages/Profile'
 
 const App: FC = () => (
   <Router>
@@ -17,6 +18,15 @@ const App: FC = () => (
       </Route>
       <Route path={LOGIN_PAGE} exact>
         <Login />
+      </Route>
+      <Route path={PROFILE} exact>
+        <Profile
+          userName="jeff"
+          userLastname="jefferson"
+          email="yo@gmail.com"
+          teamName="genericTeam"
+          developerRole="junior"
+        />
       </Route>
     </Switch>
   </Router>
