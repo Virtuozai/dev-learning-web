@@ -20,13 +20,7 @@ const App: FC = () => (
         <Login />
       </Route>
       <Route path={PROFILE} exact>
-        <Profile
-          userName="jeff"
-          userLastname="jefferson"
-          email="yo@gmail.com"
-          teamName="genericTeam"
-          developerRole="junior"
-        />
+        <Profile />
       </Route>
     </Switch>
   </Router>
