@@ -11,5 +11,5 @@ export type User = {
   lastname: string
   email: string
   teamName: string
-  developerRole: UserRole
+  role: UserRole
 }
