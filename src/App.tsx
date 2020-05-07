@@ -3,10 +3,9 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import { CssBaseline } from '@material-ui/core'
 
 import { Header, Navigation } from 'components'
-import { Login } from 'pages'
+import { Login, Profile } from 'pages'
 
 import { LOGIN_PAGE, HOME, PROFILE } from 'constants/routes'
-import Profile from 'pages/Profile'
 
 const App: FC = () => (
   <Router>
