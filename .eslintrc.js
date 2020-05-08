@@ -3,13 +3,18 @@ module.exports = {
     browser: true,
     es6: true,
   },
-  extends: ['airbnb', 'plugin:react/recommended', 'plugin:@typescript-eslint/recommended'],
+  extends: [
+    'airbnb',
+    'plugin:react/recommended',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:react-hooks/recommended',
+  ],
   globals: {
     Atomics: 'readonly',
     SharedArrayBuffer: 'readonly',
   },
   parser: '@typescript-eslint/parser',
-  plugins: ['@typescript-eslint', 'prettier'],
+  plugins: ['@typescript-eslint', 'prettier', 'react-hooks'],
   settings: {
     'import/extensions': ['.ts', '.tsx'],
     'import/parsers': {
@@ -50,5 +55,7 @@ module.exports = {
     'arrow-parens': 0,
     'linebreak-style': ['error', process.platform === 'win32' ? 'windows' : 'unix'],
     'react/no-unescaped-entities': 0,
+    'react-hooks/rules-of-hooks': 'error',
+    'react-hooks/exhaustive-deps': 'warn',
   },
 }
