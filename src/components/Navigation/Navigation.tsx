@@ -1,18 +1,8 @@
 import React, { FC, MouseEvent, useState } from 'react'
 import { Link } from 'react-router-dom'
-import {
-  AppBar,
-  Toolbar,
-  Typography,
-  Menu,
-  MenuItem,
-  IconButton,
-  Badge,
-  InputBase,
-} from '@material-ui/core'
+import { AppBar, Toolbar, Typography, Menu, MenuItem, IconButton, Badge } from '@material-ui/core'
 import {
   Menu as MenuIcon,
-  Search,
   Notifications,
   AccountCircle,
   LocalLibrary,
@@ -160,19 +150,6 @@ const Navigation: FC = () => {
           <Typography className={classes.title} variant="h6" noWrap>
             Dev learning
           </Typography>
-          <div className={classes.search}>
-            <div className={classes.searchIcon}>
-              <Search />
-            </div>
-            <InputBase
-              placeholder="Search…"
-              classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput,
-              }}
-            />
-          </div>
-          <div className={classes.grow} />
           {renderMenu()}
         </Toolbar>
       </AppBar>
