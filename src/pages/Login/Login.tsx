@@ -19,7 +19,11 @@ import { login, register } from 'data/api/users'
 
 import { useStyles } from './styles'
 
-const Login: FC = () => {
+type Props = {
+  checkIfLoggedOn: () => void
+}
+
+const Login: FC<Props> = ({ checkIfLoggedOn }: Props) => {
   const classes = useStyles()
 
   const history = useHistory()
@@ -155,6 +159,8 @@ const Login: FC = () => {
       return
     }
 
+    await checkIfLoggedOn()
+
     history.push(HOME)
   }
 
@@ -169,6 +175,8 @@ const Login: FC = () => {
 
       return
     }
+
+    await checkIfLoggedOn()
 
     history.push(HOME)
   }
