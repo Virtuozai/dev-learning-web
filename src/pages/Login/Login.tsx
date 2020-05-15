@@ -1,4 +1,4 @@
-import React, { FC, useState, FormEvent } from 'react'
+import React, { FC, useState, FormEvent, ChangeEvent } from 'react'
 import { useHistory } from 'react-router-dom'
 import {
   Avatar,
@@ -11,8 +11,11 @@ import {
   Typography,
 } from '@material-ui/core'
 import { LockOutlined } from '@material-ui/icons'
+import { Alert } from '@material-ui/lab'
 
 import { HOME } from 'constants/routes'
+
+import { login, register } from 'data/api/users'
 
 import { useStyles } from './styles'
 
@@ -23,14 +26,161 @@ const Login: FC = () => {
 
   const [isRegistering, setIsRegistering] = useState<boolean>(false)
 
+  const [password, setPassword] = useState<string | null>(null)
+  const [passwordError, setPasswordError] = useState<string | null>(null)
+
+  const [repeatPassword, setRepeatPassword] = useState<string | null>(null)
+  const [repeatPasswordError, setRepeatPasswordError] = useState<string | null>(null)
+
+  const [email, setEmail] = useState<string | null>(null)
+  const [emailError, setEmailError] = useState<string | null>(null)
+
+  const [firstName, setFirstName] = useState<string | null>(null)
+  const [firstNameError, setFirstNameError] = useState<string | null>(null)
+
+  const [lastName, setLastName] = useState<string | null>(null)
+  const [lastNameError, setLastNameError] = useState<string | null>(null)
+
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+
   function handleClick() {
     setIsRegistering(!isRegistering)
+  }
+
+  function clearErrors() {
+    setPasswordError(null)
+    setRepeatPasswordError(null)
+    setEmailError(null)
+    setErrorMessage(null)
+  }
+
+  function handlePasswordChange(event: ChangeEvent<HTMLInputElement>) {
+    const {
+      target: { value },
+    } = event
+
+    setPassword(value)
+    setPasswordError(null)
+  }
+
+  function handleRepeatPasswordChange(event: ChangeEvent<HTMLInputElement>) {
+    const {
+      target: { value },
+    } = event
+
+    setRepeatPassword(value)
+    setRepeatPasswordError(null)
+  }
+
+  function handleEmailChange(event: ChangeEvent<HTMLInputElement>) {
+    const {
+      target: { value },
+    } = event
+
+    setEmail(value)
+    setEmailError(null)
+  }
+
+  function handleFirstNameChange(event: ChangeEvent<HTMLInputElement>) {
+    const {
+      target: { value },
+    } = event
+
+    setFirstName(value)
+    setFirstNameError(null)
+  }
+
+  function handleLastNameChange(event: ChangeEvent<HTMLInputElement>) {
+    const {
+      target: { value },
+    } = event
+
+    setLastName(value)
+    setLastNameError(null)
+  }
+
+  function validateForm() {
+    let isFormValid = true
+
+    if (!email) {
+      setEmailError('Email is required')
+
+      isFormValid = false
+    }
+
+    if (!password) {
+      setPasswordError('Password is required')
+
+      isFormValid = false
+    }
+
+    if (!isRegistering) return isFormValid
+
+    if (!firstName) {
+      setFirstNameError('First name is required')
+
+      isFormValid = false
+    }
+
+    if (!lastName) {
+      setLastNameError('Last name is required')
+
+      isFormValid = false
+    }
+
+    if (!repeatPassword) {
+      setRepeatPasswordError('Repeat password is required')
+
+      isFormValid = false
+    }
+
+    if (repeatPassword !== password) {
+      setRepeatPasswordError('Passwords must match')
+
+      isFormValid = false
+    }
+
+    return isFormValid
+  }
+
+  const handleLogin = async () => {
+    if (!validateForm()) return
+    if (!email || !password) return
+
+    const response = await login({ email, password })
+
+    if (!response) {
+      setErrorMessage('Incorrect user email or password')
+
+      return
+    }
+
+    history.push(HOME)
+  }
+
+  const handleRegister = async () => {
+    if (!validateForm()) return
+    if (!email || !password || !firstName || !lastName) return
+
+    const response = await register({ firstname: firstName, lastname: lastName, email, password })
+
+    if (!response) {
+      setErrorMessage('Something went wrong')
+
+      return
+    }
+
+    history.push(HOME)
   }
 
   function handleFormSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
 
-    history.push(HOME)
+    clearErrors()
+
+    if (isRegistering) return handleRegister()
+
+    return handleLogin()
   }
 
   function renderAvatar() {
@@ -67,6 +217,9 @@ const Login: FC = () => {
           name="email"
           autoComplete="email"
           autoFocus
+          onChange={handleEmailChange}
+          error={emailError !== null}
+          helperText={emailError}
         />
         <TextField
           variant="outlined"
@@ -78,6 +231,9 @@ const Login: FC = () => {
           type="password"
           id="password"
           autoComplete="current-password"
+          onChange={handlePasswordChange}
+          error={passwordError !== null}
+          helperText={passwordError}
         />
       </>
     )
@@ -97,6 +253,9 @@ const Login: FC = () => {
               id="firstName"
               label="First Name"
               autoFocus
+              onChange={handleFirstNameChange}
+              error={firstNameError !== null}
+              helperText={firstNameError}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -108,6 +267,9 @@ const Login: FC = () => {
               label="Last Name"
               name="lastName"
               autoComplete="lname"
+              onChange={handleLastNameChange}
+              error={lastNameError !== null}
+              helperText={lastNameError}
             />
           </Grid>
         </Grid>
@@ -122,6 +284,9 @@ const Login: FC = () => {
           type="password"
           id="password"
           autoComplete="current-password"
+          onChange={handleRepeatPasswordChange}
+          error={repeatPasswordError !== null}
+          helperText={repeatPasswordError}
         />
         <Grid item xs={12}>
           <FormControlLabel
@@ -167,6 +332,11 @@ const Login: FC = () => {
     <Grid container component="main" className={classes.root}>
       <Grid item xs={false} sm={false} md={7} lg={9} className={classes.image} />
       <Grid item xs={12} sm={12} md={5} lg={3} component={Paper} elevation={6} square>
+        {errorMessage && (
+          <Alert variant="filled" severity="error">
+            {errorMessage}
+          </Alert>
+        )}
         <div className={classes.paper}>
           {renderTitle()}
           {renderForm()}
