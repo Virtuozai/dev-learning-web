@@ -21,7 +21,7 @@ const Profile: FC = () => {
 
   const user: User = {
     name: 'jeff',
-    lastname: 'jefferson',
+    lastName: 'jefferson',
     email: 'yo@gmail.com',
     teamName: 'genericTeam',
     role: UserRole.Junior,
@@ -67,7 +67,7 @@ const Profile: FC = () => {
         {renderSectionTitle('First Name')}
         {renderSectionBody(user.name)}
         {renderSectionTitle('Last Name')}
-        {renderSectionBody(user.lastname)}
+        {renderSectionBody(user.lastName)}
         {renderSectionTitle('Email')}
         {renderSectionBody(user.email)}
         {renderSectionTitle('Role')}

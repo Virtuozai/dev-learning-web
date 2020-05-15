@@ -8,7 +8,7 @@ export enum UserRole {
 
 export type User = {
   name: string
-  lastname: string
+  lastName: string
   email: string
   teamName: string
   role: UserRole
