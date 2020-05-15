@@ -1,9 +1,9 @@
 export enum UserRole {
-  junior = 'junior',
-  mid = 'mid',
-  senior = 'senior',
-  teamLead = 'teamLead',
-  god = 'god',
+  Junior = 'Junior',
+  Mid = 'Mid',
+  Senior = 'Senior',
+  TeamLead = 'TeamLead',
+  God = 'God',
 }
 
 export type User = {
