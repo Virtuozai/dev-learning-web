@@ -3,9 +3,9 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import { CssBaseline } from '@material-ui/core'
 
 import { Header, Navigation } from 'components'
-import { Login } from 'pages'
+import { Login, Profile } from 'pages'
 
-import { LOGIN_PAGE, HOME } from 'constants/routes'
+import { LOGIN_PAGE, HOME, PROFILE } from 'constants/routes'
 
 const App: FC = () => (
   <Router>
@@ -17,6 +17,9 @@ const App: FC = () => (
       </Route>
       <Route path={LOGIN_PAGE} exact>
         <Login />
+      </Route>
+      <Route path={PROFILE} exact>
+        <Profile />
       </Route>
     </Switch>
   </Router>
