@@ -1,13 +1,9 @@
 import React, { FC, MouseEvent, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import { AppBar, Toolbar, Typography, Menu, MenuItem, IconButton, Badge } from '@material-ui/core'
-import {
-  Menu as MenuIcon,
-  Notifications,
-  AccountCircle,
-  LocalLibrary,
-  Event,
-} from '@material-ui/icons'
+import { Menu as MenuIcon, AccountCircle, LocalLibrary, Event } from '@material-ui/icons'
+
+import { logout } from 'data/api/users'
 
 import * as routes from 'constants/routes'
 
@@ -15,6 +11,8 @@ import { useStyles } from './styles'
 
 const Navigation: FC = () => {
   const classes = useStyles()
+
+  const history = useHistory()
 
   const [anchorEl, setAnchorEl] = useState<Element | null>(null)
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState<Element | null>(null)
@@ -35,6 +33,12 @@ const Navigation: FC = () => {
     handleMobileMenuClose()
   }
 
+  const handleLogout = async () => {
+    await logout()
+
+    history.push(routes.LOGIN_PAGE)
+  }
+
   const handleMobileMenuOpen = (event: MouseEvent<HTMLButtonElement>) => {
     setMobileMoreAnchorEl(event.currentTarget)
   }
@@ -49,11 +53,15 @@ const Navigation: FC = () => {
         open={isMenuOpen}
         onClose={handleMenuClose}
       >
-        <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-        <MenuItem onClick={handleMenuClose}>Settings</MenuItem>
-        <Link to={routes.LOGIN_PAGE}>
-          <MenuItem onClick={handleMenuClose}>Log out</MenuItem>
+        <Link to={routes.PROFILE}>
+          <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
         </Link>
+
+        <Link to={routes.SETTINGS}>
+          <MenuItem onClick={handleMenuClose}>Settings</MenuItem>
+        </Link>
+
+        <MenuItem onClick={handleLogout}>Log out</MenuItem>
       </Menu>
     )
   }
@@ -88,19 +96,14 @@ const Navigation: FC = () => {
           </MenuItem>
         </Link>
 
-        <MenuItem>
-          <IconButton>
-            <Notifications />
-          </IconButton>
-          <p>Notifications</p>
-        </MenuItem>
-
-        <MenuItem onClick={handleProfileMenuOpen}>
-          <IconButton>
-            <AccountCircle />
-          </IconButton>
-          <p>Profile</p>
-        </MenuItem>
+        <Link to={routes.PROFILE}>
+          <MenuItem onClick={handleProfileMenuOpen}>
+            <IconButton>
+              <AccountCircle />
+            </IconButton>
+            <p>Profile</p>
+          </MenuItem>
+        </Link>
       </Menu>
     )
   }
@@ -122,12 +125,6 @@ const Navigation: FC = () => {
               </Badge>
             </IconButton>
           </Link>
-
-          <IconButton className={classes.iconButton}>
-            <Badge color="secondary">
-              <Notifications />
-            </Badge>
-          </IconButton>
 
           <IconButton edge="end" onClick={handleProfileMenuOpen} className={classes.iconButton}>
             <AccountCircle />
