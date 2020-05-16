@@ -13,8 +13,9 @@ const PrivateRoute: FC<Props> = ({ isLoggedOn, children, path }: Props) => {
       path={path}
       exact
       render={({ location }) => {
-        if (!isLoggedOn)
+        if (!isLoggedOn) {
           return <Redirect to={{ pathname: LOGIN_PAGE, state: { from: location } }} />
+        }
 
         return children
       }}

@@ -9,7 +9,11 @@ import * as routes from 'constants/routes'
 
 import { useStyles } from './styles'
 
-const Navigation: FC = () => {
+type Props = {
+  checkIfLoggedOn: () => void
+}
+
+const Navigation: FC<Props> = ({ checkIfLoggedOn }: Props) => {
   const classes = useStyles()
 
   const history = useHistory()
@@ -35,6 +39,7 @@ const Navigation: FC = () => {
 
   const handleLogout = async () => {
     await logout()
+    await checkIfLoggedOn()
 
     history.push(routes.LOGIN_PAGE)
   }
