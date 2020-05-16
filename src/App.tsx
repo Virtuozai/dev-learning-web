@@ -1,9 +1,9 @@
-import React, { FC, useState } from 'react'
+import React, { FC, useState, useEffect } from 'react'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import { CssBaseline } from '@material-ui/core'
 
 import { Header, Navigation, PrivateRoute } from 'components'
-import { Login, Profile } from 'pages'
+import { Login, Profile, Members } from 'pages'
 
 import { getCurrentUser } from 'data/api/users'
 
@@ -16,13 +16,20 @@ const App: FC = () => {
     const response = await getCurrentUser()
 
     if (!response) {
-      return setIsLoggedOn(false)
+      setIsLoggedOn(false)
+
+      return response
     }
 
-    return setIsLoggedOn(true)
+    setIsLoggedOn(true)
+
+    return response
   }
 
-  checkIfLoggedOn()
+  useEffect(() => {
+    checkIfLoggedOn()
+  }, [])
+
   return (
     <Router>
       <CssBaseline />
@@ -35,7 +42,7 @@ const App: FC = () => {
           <Profile />
         </PrivateRoute>
         <PrivateRoute isLoggedOn={isLoggedOn} path={MEMBERS}>
-          <Profile />
+          <Members />
         </PrivateRoute>
         <PrivateRoute isLoggedOn={isLoggedOn} path={HOME}>
           <Header buttonText="I am button text" />

@@ -20,6 +20,7 @@ const Profile: FC = () => {
   const [value, setValue] = React.useState(0)
 
   const user: User = {
+    id: 1,
     name: 'jeff',
     lastName: 'jefferson',
     email: 'yo@gmail.com',
