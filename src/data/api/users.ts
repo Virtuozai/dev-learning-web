@@ -3,10 +3,21 @@ import api from './api'
 const USERS_API_ENDPOINT = 'users'
 const USER_API_ENDPOINT = 'users/:id'
 const USER_LOGIN_API_ENDPOINT = 'users/login'
+const CURRENT_USER_API_ENDPOINT = 'users/current_user'
 
 export const getUser = async (id: number) => {
   try {
     const user = api.get(USER_API_ENDPOINT.replace(':id', id.toString()))
+
+    return user
+  } catch (ex) {
+    return null
+  }
+}
+
+export const getCurrentUser = async () => {
+  try {
+    const user = api.get(CURRENT_USER_API_ENDPOINT)
 
     return user
   } catch (ex) {
