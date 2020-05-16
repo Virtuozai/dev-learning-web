@@ -4,6 +4,7 @@ const USERS_API_ENDPOINT = 'users'
 const USER_API_ENDPOINT = 'users/:id'
 const USER_LOGIN_API_ENDPOINT = 'users/login'
 const CURRENT_USER_API_ENDPOINT = 'users/current_user'
+const LOGOUT_USER_API_ENDPOINT = 'users/logout'
 
 export const getUser = async (id: number) => {
   try {
@@ -62,6 +63,16 @@ export const register = async (registerCreds: RegisterRequestArgs) => {
     const token = await api.post(USERS_API_ENDPOINT, registerCreds)
 
     return token
+  } catch (ex) {
+    return null
+  }
+}
+
+export const logout = async () => {
+  try {
+    const response = await api.get(LOGOUT_USER_API_ENDPOINT)
+
+    return response
   } catch (ex) {
     return null
   }
