@@ -10,7 +10,7 @@ import { getCurrentUser } from 'data/api/users'
 import { HOME, PROFILE, MEMBERS, LOGIN_PAGE } from 'constants/routes'
 
 const App: FC = () => {
-  const [isLoggedOn, setIsLoggedOn] = useState(false)
+  const [isLoggedOn, setIsLoggedOn] = useState(true)
 
   const checkIfLoggedOn = async () => {
     const response = await getCurrentUser()
@@ -26,18 +26,18 @@ const App: FC = () => {
     return response
   }
 
-  useEffect(() => {
-    checkIfLoggedOn()
-  }, [])
+  checkIfLoggedOn()
 
   return (
     <Router>
       <CssBaseline />
-      {isLoggedOn && <Navigation />}
+      {isLoggedOn && <Navigation checkIfLoggedOn={checkIfLoggedOn} />}
       <Switch>
-        <Route path={LOGIN_PAGE} exact>
-          <Login checkIfLoggedOn={checkIfLoggedOn} />
-        </Route>
+        {!isLoggedOn && (
+          <Route path={LOGIN_PAGE} exact>
+            <Login checkIfLoggedOn={checkIfLoggedOn} />
+          </Route>
+        )}
         <PrivateRoute isLoggedOn={isLoggedOn} path={PROFILE}>
           <Profile />
         </PrivateRoute>

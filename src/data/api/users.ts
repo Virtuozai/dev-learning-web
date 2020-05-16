@@ -72,7 +72,7 @@ export const register = async (registerCreds: RegisterRequestArgs) => {
 
 export const logout = async () => {
   try {
-    const response = await api.get(LOGOUT_USER_API_ENDPOINT)
+    const response = await api.post(LOGOUT_USER_API_ENDPOINT)
 
     return response
   } catch (ex) {
