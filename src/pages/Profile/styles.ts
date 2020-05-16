@@ -51,4 +51,11 @@ export const useStyles = makeStyles(theme => ({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  gridList: {
+    width: 400,
+    height: 550,
+  },
+  subject: {
+    margin: theme.spacing(0, 4),
+  },
 }))

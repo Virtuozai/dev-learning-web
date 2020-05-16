@@ -10,9 +10,14 @@ import {
   Divider,
   Hidden,
   Tabs,
+  Chip,
+  GridList,
+  GridListTile,
+  Box,
 } from '@material-ui/core'
 
 import { User, UserRole } from 'types/models/user'
+import { Subject } from 'types/models/subject'
 import { useStyles } from './styles'
 
 const Profile: FC = () => {
@@ -26,6 +31,32 @@ const Profile: FC = () => {
     teamName: 'genericTeam',
     role: UserRole.Junior,
   }
+
+  const subject: Subject = {
+    title: 'subjectRandom',
+    description: 'THis is a very nice subject',
+  }
+
+  const subject2: Subject = {
+    title: 'subjectRandom2',
+    description: 'THis is a very nice subject2',
+  }
+
+  const data1 = [
+    subject,
+    subject2,
+    subject,
+    subject2,
+    subject,
+    subject2,
+    subject,
+    subject2,
+    subject,
+    subject2,
+    subject,
+    subject2,
+    subject,
+  ]
 
   function renderTitle() {
     const titleText = 'My Profile'
@@ -95,10 +126,22 @@ const Profile: FC = () => {
     )
   }
 
+  function renderSubjectList() {
+    return (
+      <GridList cellHeight={45} cols={1} className={classes.gridList}>
+        {data1.map(({ title }) => (
+          <GridListTile key={title}>
+            <Chip color="primary" label={title} className={classes.subject} />
+          </GridListTile>
+        ))}
+      </GridList>
+    )
+  }
+
   function renderInsideTab() {
     if (value === 0) return renderBasicInfo()
     // if (value === 1) return renderLearnedSubjets()
-    return <div>emty</div>
+    return renderSubjectList()
   }
 
   function renderInfo() {
