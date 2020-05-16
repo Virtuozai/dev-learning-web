@@ -54,8 +54,8 @@ export const login = async (userCreds: LoginRequestArgs) => {
 }
 
 type RegisterRequestArgs = {
-  firstname: string
-  lastname: string
+  firstName: string
+  lastName: string
   email: string
   password: string
 }

@@ -8,9 +8,12 @@ export enum UserRole {
 
 export type User = {
   id: number
-  name: string
+  firstName: string
   lastName: string
   email: string
-  teamName: string
+  team: {
+    id: number
+    name: string
+  }
   role: UserRole
 }

@@ -168,7 +168,7 @@ const Login: FC<Props> = ({ checkIfLoggedOn }: Props) => {
     if (!validateForm()) return
     if (!email || !password || !firstName || !lastName) return
 
-    const response = await register({ firstname: firstName, lastname: lastName, email, password })
+    const response = await register({ firstName, lastName, email, password })
 
     if (!response) {
       setErrorMessage('Something went wrong')
