@@ -13,7 +13,6 @@ import {
   Chip,
   GridList,
   GridListTile,
-  Box,
 } from '@material-ui/core'
 
 import { User, UserRole } from 'types/models/user'
