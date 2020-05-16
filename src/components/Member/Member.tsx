@@ -21,13 +21,13 @@ type Props = {
 const Members: FC<Props> = ({ user }: Props) => {
   const classes = useStyles()
 
-  const { name, lastName, email, teamName } = user
+  const { firstName, lastName, email, team } = user
 
   return (
     <Card className={classes.memberItem}>
       <CardHeader
-        avatar={<Avatar>{name[0] + lastName[0]}</Avatar>}
-        title={<Button size="small">{`${name} ${lastName}`}</Button>}
+        avatar={<Avatar>{firstName[0] + lastName[0]}</Avatar>}
+        title={<Button size="small">{`${firstName} ${lastName}`}</Button>}
       />
       <Divider />
       <CardContent>
@@ -38,7 +38,7 @@ const Members: FC<Props> = ({ user }: Props) => {
         <Grid container alignItems="center">
           <Typography variant="h6">Team:</Typography>
           <Button size="small" className={classes.alignRight}>
-            {teamName}
+            {team?.name || 'User has no team'}
           </Button>
         </Grid>
       </CardContent>

@@ -1,7 +1,7 @@
 import React, { FC, MouseEvent, useState } from 'react'
 import { Link, useHistory } from 'react-router-dom'
 import { AppBar, Toolbar, Typography, Menu, MenuItem, IconButton, Badge } from '@material-ui/core'
-import { Menu as MenuIcon, AccountCircle, LocalLibrary, Event } from '@material-ui/icons'
+import { Menu as MenuIcon, AccountCircle, LocalLibrary, Event, People } from '@material-ui/icons'
 
 import { logout } from 'data/api/users'
 
@@ -101,14 +101,23 @@ const Navigation: FC<Props> = ({ checkIfLoggedOn }: Props) => {
           </MenuItem>
         </Link>
 
-        <Link to={routes.PROFILE}>
-          <MenuItem onClick={handleProfileMenuOpen}>
+        <Link to={routes.MEMBERS}>
+          <MenuItem>
             <IconButton>
-              <AccountCircle />
+              <Badge color="secondary">
+                <People />
+              </Badge>
             </IconButton>
-            <p>Profile</p>
+            <p>Members</p>
           </MenuItem>
         </Link>
+
+        <MenuItem onClick={handleProfileMenuOpen}>
+          <IconButton>
+            <AccountCircle />
+          </IconButton>
+          <p>Profile</p>
+        </MenuItem>
       </Menu>
     )
   }
@@ -127,6 +136,14 @@ const Navigation: FC<Props> = ({ checkIfLoggedOn }: Props) => {
             <IconButton className={classes.iconButton}>
               <Badge color="secondary">
                 <LocalLibrary />
+              </Badge>
+            </IconButton>
+          </Link>
+
+          <Link to={routes.MEMBERS}>
+            <IconButton className={classes.iconButton}>
+              <Badge color="secondary">
+                <People />
               </Badge>
             </IconButton>
           </Link>
