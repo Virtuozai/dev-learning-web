@@ -13,4 +13,14 @@ export const useStyles = makeStyles(theme => ({
   horizontal: {
     margin: theme.spacing(0, 2),
   },
+  broaderPadding: {
+    padding: theme.spacing(2),
+  },
+  alignRight: {
+    marginLeft: 'auto',
+  },
+  scrollable: {
+    maxHeight: 200,
+    overflow: 'auto',
+  },
 }))
