@@ -3,11 +3,11 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import { CssBaseline } from '@material-ui/core'
 
 import { Header, Navigation, PrivateRoute } from 'components'
-import { Login, Profile, Members } from 'pages'
+import { Login, Profile, Members, Learning } from 'pages'
 
 import { getCurrentUser } from 'data/api/users'
 
-import { HOME, PROFILE, MEMBERS, LOGIN_PAGE } from 'constants/routes'
+import { HOME, PROFILE, MEMBERS, LOGIN_PAGE, LEARNING } from 'constants/routes'
 
 const App: FC = () => {
   const [isLoggedOn, setIsLoggedOn] = useState(true)
@@ -43,6 +43,9 @@ const App: FC = () => {
         </PrivateRoute>
         <PrivateRoute isLoggedOn={isLoggedOn} path={MEMBERS}>
           <Members />
+        </PrivateRoute>
+        <PrivateRoute isLoggedOn={isLoggedOn} path={LEARNING}>
+          <Learning />
         </PrivateRoute>
         <PrivateRoute isLoggedOn={isLoggedOn} path={HOME}>
           <Header buttonText="I am button text" />
