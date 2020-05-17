@@ -4,6 +4,7 @@ import api from './api'
 
 const COMMENT_API_ENDPOINT = 'comments'
 const SUBJECT_COMMENTS_API_ENDPOINT = 'comments/subject/:id'
+const UPDATE_COMMENT_API_ENDPOINT = 'comments/:id'
 
 export const getSubjectComments = async (id: string) => {
   try {
@@ -24,6 +25,16 @@ export type CreateCommentArgs = {
 export const createComment = async (args: CreateCommentArgs) => {
   try {
     const response = await api.post(COMMENT_API_ENDPOINT, args)
+
+    return response
+  } catch (ex) {
+    return null
+  }
+}
+
+export const updateComment = async (commentId: string, comment: Comment) => {
+  try {
+    const response = await api.put(UPDATE_COMMENT_API_ENDPOINT.replace(':id', commentId), comment)
 
     return response
   } catch (ex) {
