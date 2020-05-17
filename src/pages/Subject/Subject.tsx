@@ -22,7 +22,7 @@ import { Edit, Save, Cancel, People, Send, Add } from '@material-ui/icons'
 import { Alert } from '@material-ui/lab'
 
 import { getSubject, updateSubject } from 'data/api/subjects'
-import { getSubjectComments, createComment } from 'data/api/comments'
+import { getSubjectComments, createComment, updateComment } from 'data/api/comments'
 import { getTeamUsers, addSubjectToUser } from 'data/api/users'
 
 import { Subject as SubjectType } from 'types/models/subject'
@@ -47,6 +47,8 @@ const Subject: FC = () => {
 
   const [comments, setComments] = useState<Array<Comment>>([])
   const [newComment, setNewComment] = useState<string>('')
+  const [editedComment, setEditedComment] = useState<string>('')
+  const [editedCommentId, setEditedCommentId] = useState<number | null>(null)
 
   const [isSelectUserModalOpen, setIsSelectUserModalOpen] = useState<boolean>(false)
   const [teamUsers, setTeamUsers] = useState<Array<User>>([])
@@ -175,6 +177,51 @@ const Subject: FC = () => {
     )
   }
 
+  function handleCommentEdit(event: ChangeEvent<HTMLInputElement>) {
+    const {
+      target: { value },
+    } = event
+
+    setEditedComment(value)
+  }
+
+  async function handleEditSave() {
+    const editedCommentEntity = comments.find(
+      ({ id: commentEntityId }) => commentEntityId === editedCommentId,
+    )
+
+    if (!editedCommentEntity || !editedComment || !editedCommentId) {
+      setError('Comment cannot be empty')
+
+      return
+    }
+
+    const response = await updateComment(editedCommentId.toString(), {
+      ...editedCommentEntity,
+      text: editedComment,
+    })
+
+    if (response?.status !== 204) {
+      setError('something went wrong')
+
+      return
+    }
+
+    await fetchComments()
+
+    setEditedCommentId(null)
+    setEditedComment('')
+  }
+
+  const handleCommentEditing = (commentId: number) => () => {
+    const editedCommentInitialText = comments.find(
+      ({ id: commentEntityId }) => commentEntityId === commentId,
+    )?.text
+
+    setEditedCommentId(commentId)
+    setEditedComment(editedCommentInitialText || '')
+  }
+
   function renderComments() {
     return comments.map(({ id: commentId, text, user: commentUser }) => (
       <Grid
@@ -191,14 +238,30 @@ const Subject: FC = () => {
         </Grid>
         <Grid item xs={11} sm={10}>
           <Card className={classes.broaderPadding}>
-            <Typography>
-              {text}
-              {user?.id === commentUser.id && (
+            {editedCommentId === commentId ? (
+              <>
+                <TextField
+                  className={classes.betweenBlocks}
+                  variant="outlined"
+                  multiline
+                  fullWidth
+                  value={editedComment}
+                  onChange={handleCommentEdit}
+                />
                 <Fab className={classes.horizontal} size="small">
-                  <Edit />
+                  <Save onClick={handleEditSave} />
                 </Fab>
-              )}
-            </Typography>
+              </>
+            ) : (
+              <Typography>
+                {text}
+                {user?.id === commentUser.id && (
+                  <Fab className={classes.horizontal} size="small">
+                    <Edit onClick={handleCommentEditing(commentId)} />
+                  </Fab>
+                )}
+              </Typography>
+            )}
           </Card>
         </Grid>
       </Grid>
@@ -231,9 +294,12 @@ const Subject: FC = () => {
       text: newComment,
     })
 
-    if (response?.status !== 204) setError('Failed to send your message')
+    if (!response?.data) setError('Failed to send your message')
 
     await fetchComments()
+
+    setNewComment('')
+    setError(null)
   }
 
   function renderWriteCommentBlock() {
@@ -413,6 +479,7 @@ const Subject: FC = () => {
               </Button>
             )}
 
+            <Divider />
             <Typography className={classes.top} variant="h4">
               Comments
             </Typography>
