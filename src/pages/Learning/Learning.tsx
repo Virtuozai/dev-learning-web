@@ -1,5 +1,6 @@
 import React, { FC, useState, useEffect, ChangeEvent } from 'react'
 import { uniq, compact } from 'lodash'
+import { Link } from 'react-router-dom'
 import {
   Chip,
   Container,
@@ -20,8 +21,9 @@ import { Add, ExpandMore } from '@material-ui/icons'
 import { Alert } from '@material-ui/lab'
 
 import { getSubjects, createSubject, CreateSubjectArgs } from 'data/api/subjects'
-
 import { Subject } from 'types/models/subject'
+
+import { SUBJECT } from 'constants/routes'
 
 import { useStyles } from './styles'
 
@@ -231,7 +233,11 @@ const Learning: FC = () => {
 
         renderedParentIds.push(parentId)
 
-        const renderedSubject = <Chip key={id} color="primary" label={subjects[id].title} />
+        const renderedSubject = (
+          <Link to={SUBJECT.replace(':id', id.toString())}>
+            <Chip key={id} color="primary" label={subjects[id].title} clickable />
+          </Link>
+        )
 
         if (!parentIds.includes(id)) return renderedSubject
 
@@ -263,7 +269,14 @@ const Learning: FC = () => {
         return (
           <ExpansionPanel key={parentId}>
             <ExpansionPanelSummary expandIcon={<ExpandMore />}>
-              <Chip color="primary" className="box-item" label={subjects[parentId].title} />
+              <Link to={SUBJECT.replace(':id', parentId.toString())}>
+                <Chip
+                  color="primary"
+                  className="box-item"
+                  label={subjects[parentId].title}
+                  clickable
+                />
+              </Link>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails className="u-flex-wrap">
               {renderSubjectsByParent(parentId)}
