@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect, ChangeEvent } from 'react'
+import React, { FC, useState, useEffect, ChangeEvent, useContext } from 'react'
 import { uniq, compact } from 'lodash'
 import { Link } from 'react-router-dom'
 import {
@@ -22,13 +22,19 @@ import { Alert } from '@material-ui/lab'
 
 import { getSubjects, createSubject, CreateSubjectArgs } from 'data/api/subjects'
 import { Subject } from 'types/models/subject'
+import { UserRole } from 'types/models/user'
 
 import { SUBJECT } from 'constants/routes'
+
+import { UserContext } from 'App'
 
 import { useStyles } from './styles'
 
 const Learning: FC = () => {
   const classes = useStyles()
+
+  const user = useContext(UserContext)
+  const canUserAddSubject = user?.role === UserRole.God || user?.role === UserRole.TeamLead
 
   const [parentIds, setParentIds] = useState<Array<number>>([])
   const [subjectIds, setSubjectIds] = useState<Array<number>>([])
@@ -176,12 +182,14 @@ const Learning: FC = () => {
               value={newSubjectParentId || ''}
               onChange={handleParentSelect}
             >
-              <MenuItem value={-1}>None</MenuItem>
-              {subjectIds.map(id => (
-                <MenuItem key={id} value={id}>
-                  {subjects[id].title}
-                </MenuItem>
-              ))}
+              <div className={classes.scrollable}>
+                <MenuItem value={-1}>None</MenuItem>
+                {subjectIds.map(id => (
+                  <MenuItem key={id} value={id}>
+                    {subjects[id].title}
+                  </MenuItem>
+                ))}
+              </div>
             </Select>
           </FormControl>
 
@@ -213,15 +221,17 @@ const Learning: FC = () => {
         <Typography variant="h3" align="center">
           {titleText}
         </Typography>
-        <Button
-          size="small"
-          variant="contained"
-          color="secondary"
-          startIcon={<Add />}
-          onClick={handleAddSubjectClick}
-        >
-          Add subject
-        </Button>
+        {canUserAddSubject && (
+          <Button
+            size="small"
+            variant="contained"
+            color="secondary"
+            startIcon={<Add />}
+            onClick={handleAddSubjectClick}
+          >
+            Add subject
+          </Button>
+        )}
       </div>
     )
   }

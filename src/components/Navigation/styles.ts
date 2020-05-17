@@ -38,4 +38,7 @@ export const useStyles = makeStyles(theme => ({
   iconButton: {
     color: theme.palette.common.white,
   },
+  bottom: {
+    marginBottom: theme.spacing(2),
+  },
 }))

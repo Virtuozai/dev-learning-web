@@ -1,9 +1,9 @@
 export enum UserRole {
-  Junior = 'Junior',
-  Mid = 'Mid',
-  Senior = 'Senior',
-  TeamLead = 'TeamLead',
-  God = 'God',
+  Junior = 0,
+  Mid = 1,
+  Senior = 2,
+  TeamLead = 3,
+  God = 4,
 }
 
 export type User = {
@@ -14,6 +14,7 @@ export type User = {
   team: {
     id: number
     name: string
-  }
+  } | null
+  teamId: number
   role: UserRole
 }

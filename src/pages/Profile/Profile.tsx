@@ -25,6 +25,7 @@ const Profile: FC = () => {
     lastName: 'jefferson',
     email: 'yo@gmail.com',
     team: { id: 1, name: 'genericTeam' },
+    teamId: 1,
     role: UserRole.Junior,
   }
 
@@ -72,9 +73,9 @@ const Profile: FC = () => {
         {renderSectionTitle('Email')}
         {renderSectionBody(user.email)}
         {renderSectionTitle('Role')}
-        {renderSectionBody(user.role)}
+        {renderSectionBody(user.role.toString())}
         {renderSectionTitle('Team Name')}
-        {renderSectionBody(user.team.name)}
+        {renderSectionBody(user.teamId.toString())}
       </>
     )
   }

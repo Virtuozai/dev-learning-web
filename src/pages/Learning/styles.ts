@@ -16,4 +16,8 @@ export const useStyles = makeStyles(theme => ({
   between: {
     margin: theme.spacing(2),
   },
+  scrollable: {
+    maxHeight: 200,
+    overflow: 'auto',
+  },
 }))

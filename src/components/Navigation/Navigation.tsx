@@ -162,8 +162,10 @@ const Navigation: FC<Props> = ({ checkIfLoggedOn }: Props) => {
     )
   }
 
+  const navigationClass = `${classes.grow} ${classes.bottom}`
+
   return (
-    <div className={classes.grow}>
+    <div className={navigationClass}>
       <AppBar position="static">
         <Toolbar>
           <Typography className={classes.title} variant="h6" noWrap>

@@ -7,10 +7,24 @@ const USER_API_ENDPOINT = 'users/:id'
 const USER_LOGIN_API_ENDPOINT = 'users/login'
 const CURRENT_USER_API_ENDPOINT = 'users/current_user'
 const LOGOUT_USER_API_ENDPOINT = 'users/logout'
+const TEAM_USERS_API_ENDPOINT = 'users/team_users/:id'
+const USER_SUBJECT_API_ENDPOINT = 'usersubjects'
 
 export const getUser = async (id: number) => {
   try {
     const response = await api.get<User>(USER_API_ENDPOINT.replace(':id', id.toString()))
+
+    return response.data
+  } catch (ex) {
+    return null
+  }
+}
+
+export const getTeamUsers = async (id: number) => {
+  try {
+    const response = await api.get<Array<User>>(
+      TEAM_USERS_API_ENDPOINT.replace(':id', id.toString()),
+    )
 
     return response.data
   } catch (ex) {
@@ -73,6 +87,19 @@ export const register = async (registerCreds: RegisterRequestArgs) => {
 export const logout = async () => {
   try {
     const response = await api.post(LOGOUT_USER_API_ENDPOINT)
+
+    return response
+  } catch (ex) {
+    return null
+  }
+}
+
+export const addSubjectToUser = async (userId: number, subjectId: number) => {
+  try {
+    const response = await api.post(USER_SUBJECT_API_ENDPOINT, {
+      userId,
+      subjectId,
+    })
 
     return response
   } catch (ex) {
