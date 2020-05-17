@@ -3,11 +3,11 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import { CssBaseline } from '@material-ui/core'
 
 import { Header, Navigation, PrivateRoute } from 'components'
-import { Login, Profile, Members, Learning } from 'pages'
+import { Login, Profile, Members, Learning, Subject } from 'pages'
 
 import { getCurrentUser } from 'data/api/users'
 
-import { HOME, PROFILE, MEMBERS, LOGIN_PAGE, LEARNING } from 'constants/routes'
+import * as routes from 'constants/routes'
 
 const App: FC = () => {
   const [isLoggedOn, setIsLoggedOn] = useState(true)
@@ -34,20 +34,23 @@ const App: FC = () => {
       {isLoggedOn && <Navigation checkIfLoggedOn={checkIfLoggedOn} />}
       <Switch>
         {!isLoggedOn && (
-          <Route path={LOGIN_PAGE} exact>
+          <Route path={routes.LOGIN_PAGE} exact>
             <Login checkIfLoggedOn={checkIfLoggedOn} />
           </Route>
         )}
-        <PrivateRoute isLoggedOn={isLoggedOn} path={PROFILE}>
+        <PrivateRoute isLoggedOn={isLoggedOn} path={routes.PROFILE}>
           <Profile />
         </PrivateRoute>
-        <PrivateRoute isLoggedOn={isLoggedOn} path={MEMBERS}>
+        <PrivateRoute isLoggedOn={isLoggedOn} path={routes.MEMBERS}>
           <Members />
         </PrivateRoute>
-        <PrivateRoute isLoggedOn={isLoggedOn} path={LEARNING}>
+        <PrivateRoute isLoggedOn={isLoggedOn} path={routes.LEARNING}>
           <Learning />
         </PrivateRoute>
-        <PrivateRoute isLoggedOn={isLoggedOn} path={HOME}>
+        <PrivateRoute isLoggedOn={isLoggedOn} path={routes.SUBJECT}>
+          <Subject />
+        </PrivateRoute>
+        <PrivateRoute isLoggedOn={isLoggedOn} path={routes.HOME}>
           <Header buttonText="I am button text" />
         </PrivateRoute>
       </Switch>
