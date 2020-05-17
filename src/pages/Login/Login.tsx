@@ -19,7 +19,11 @@ import { login, register } from 'data/api/users'
 
 import { useStyles } from './styles'
 
-const Login: FC = () => {
+type Props = {
+  checkIfLoggedOn: () => void
+}
+
+const Login: FC<Props> = ({ checkIfLoggedOn }: Props) => {
   const classes = useStyles()
 
   const history = useHistory()
@@ -155,6 +159,8 @@ const Login: FC = () => {
       return
     }
 
+    await checkIfLoggedOn()
+
     history.push(HOME)
   }
 
@@ -162,13 +168,15 @@ const Login: FC = () => {
     if (!validateForm()) return
     if (!email || !password || !firstName || !lastName) return
 
-    const response = await register({ firstname: firstName, lastname: lastName, email, password })
+    const response = await register({ firstName, lastName, email, password })
 
     if (!response) {
       setErrorMessage('Something went wrong')
 
       return
     }
+
+    await checkIfLoggedOn()
 
     history.push(HOME)
   }

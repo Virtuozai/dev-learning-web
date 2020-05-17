@@ -24,10 +24,11 @@ const Profile: FC = () => {
   const [value, setValue] = React.useState(0)
 
   const user: User = {
-    name: 'jeff',
+    id: 1,
+    firstName: 'jeff',
     lastName: 'jefferson',
     email: 'yo@gmail.com',
-    teamName: 'genericTeam',
+    team: { id: 1, name: 'genericTeam' },
     role: UserRole.Junior,
   }
 
@@ -95,7 +96,7 @@ const Profile: FC = () => {
     return (
       <>
         {renderSectionTitle('First Name')}
-        {renderSectionBody(user.name)}
+        {renderSectionBody(user.firstName)}
         {renderSectionTitle('Last Name')}
         {renderSectionBody(user.lastName)}
         {renderSectionTitle('Email')}
@@ -103,7 +104,7 @@ const Profile: FC = () => {
         {renderSectionTitle('Role')}
         {renderSectionBody(user.role)}
         {renderSectionTitle('Team Name')}
-        {renderSectionBody(user.teamName)}
+        {renderSectionBody(user.team.name)}
       </>
     )
   }

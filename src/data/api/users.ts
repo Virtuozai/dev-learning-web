@@ -1,14 +1,28 @@
+import { User } from 'types/models/user'
+
 import api from './api'
 
 const USERS_API_ENDPOINT = 'users'
 const USER_API_ENDPOINT = 'users/:id'
 const USER_LOGIN_API_ENDPOINT = 'users/login'
+const CURRENT_USER_API_ENDPOINT = 'users/current_user'
+const LOGOUT_USER_API_ENDPOINT = 'users/logout'
 
 export const getUser = async (id: number) => {
   try {
-    const user = api.get(USER_API_ENDPOINT.replace(':id', id.toString()))
+    const response = await api.get<User>(USER_API_ENDPOINT.replace(':id', id.toString()))
 
-    return user
+    return response.data
+  } catch (ex) {
+    return null
+  }
+}
+
+export const getCurrentUser = async () => {
+  try {
+    const response = await api.get<User>(CURRENT_USER_API_ENDPOINT)
+
+    return response
   } catch (ex) {
     return null
   }
@@ -16,9 +30,9 @@ export const getUser = async (id: number) => {
 
 export const getUsers = async () => {
   try {
-    const users = api.get(USERS_API_ENDPOINT)
+    const response = await api.get<Array<User>>(USERS_API_ENDPOINT)
 
-    return users
+    return response.data
   } catch (ex) {
     return null
   }
@@ -31,26 +45,36 @@ type LoginRequestArgs = {
 
 export const login = async (userCreds: LoginRequestArgs) => {
   try {
-    const token = await api.post(USER_LOGIN_API_ENDPOINT, userCreds)
+    const response = await api.post(USER_LOGIN_API_ENDPOINT, userCreds)
 
-    return token
+    return response
   } catch (ex) {
     return null
   }
 }
 
 type RegisterRequestArgs = {
-  firstname: string
-  lastname: string
+  firstName: string
+  lastName: string
   email: string
   password: string
 }
 
 export const register = async (registerCreds: RegisterRequestArgs) => {
   try {
-    const token = await api.post(USERS_API_ENDPOINT, registerCreds)
+    const response = await api.post(USERS_API_ENDPOINT, registerCreds)
 
-    return token
+    return response
+  } catch (ex) {
+    return null
+  }
+}
+
+export const logout = async () => {
+  try {
+    const response = await api.post(LOGOUT_USER_API_ENDPOINT)
+
+    return response
   } catch (ex) {
     return null
   }

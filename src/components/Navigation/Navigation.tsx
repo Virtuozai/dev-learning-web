@@ -1,30 +1,22 @@
 import React, { FC, MouseEvent, useState } from 'react'
-import { Link } from 'react-router-dom'
-import {
-  AppBar,
-  Toolbar,
-  Typography,
-  Menu,
-  MenuItem,
-  IconButton,
-  Badge,
-  InputBase,
-} from '@material-ui/core'
-import {
-  Menu as MenuIcon,
-  Search,
-  Notifications,
-  AccountCircle,
-  LocalLibrary,
-  Event,
-} from '@material-ui/icons'
+import { Link, useHistory } from 'react-router-dom'
+import { AppBar, Toolbar, Typography, Menu, MenuItem, IconButton, Badge } from '@material-ui/core'
+import { Menu as MenuIcon, AccountCircle, LocalLibrary, Event, People } from '@material-ui/icons'
+
+import { logout } from 'data/api/users'
 
 import * as routes from 'constants/routes'
 
 import { useStyles } from './styles'
 
-const Navigation: FC = () => {
+type Props = {
+  checkIfLoggedOn: () => void
+}
+
+const Navigation: FC<Props> = ({ checkIfLoggedOn }: Props) => {
   const classes = useStyles()
+
+  const history = useHistory()
 
   const [anchorEl, setAnchorEl] = useState<Element | null>(null)
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState<Element | null>(null)
@@ -45,6 +37,13 @@ const Navigation: FC = () => {
     handleMobileMenuClose()
   }
 
+  const handleLogout = async () => {
+    await logout()
+    await checkIfLoggedOn()
+
+    history.push(routes.LOGIN_PAGE)
+  }
+
   const handleMobileMenuOpen = (event: MouseEvent<HTMLButtonElement>) => {
     setMobileMoreAnchorEl(event.currentTarget)
   }
@@ -59,11 +58,15 @@ const Navigation: FC = () => {
         open={isMenuOpen}
         onClose={handleMenuClose}
       >
-        <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-        <MenuItem onClick={handleMenuClose}>Settings</MenuItem>
-        <Link to={routes.LOGIN_PAGE}>
-          <MenuItem onClick={handleMenuClose}>Log out</MenuItem>
+        <Link to={routes.PROFILE}>
+          <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
         </Link>
+
+        <Link to={routes.SETTINGS}>
+          <MenuItem onClick={handleMenuClose}>Settings</MenuItem>
+        </Link>
+
+        <MenuItem onClick={handleLogout}>Log out</MenuItem>
       </Menu>
     )
   }
@@ -98,12 +101,16 @@ const Navigation: FC = () => {
           </MenuItem>
         </Link>
 
-        <MenuItem>
-          <IconButton>
-            <Notifications />
-          </IconButton>
-          <p>Notifications</p>
-        </MenuItem>
+        <Link to={routes.MEMBERS}>
+          <MenuItem>
+            <IconButton>
+              <Badge color="secondary">
+                <People />
+              </Badge>
+            </IconButton>
+            <p>Members</p>
+          </MenuItem>
+        </Link>
 
         <MenuItem onClick={handleProfileMenuOpen}>
           <IconButton>
@@ -133,11 +140,13 @@ const Navigation: FC = () => {
             </IconButton>
           </Link>
 
-          <IconButton className={classes.iconButton}>
-            <Badge color="secondary">
-              <Notifications />
-            </Badge>
-          </IconButton>
+          <Link to={routes.MEMBERS}>
+            <IconButton className={classes.iconButton}>
+              <Badge color="secondary">
+                <People />
+              </Badge>
+            </IconButton>
+          </Link>
 
           <IconButton edge="end" onClick={handleProfileMenuOpen} className={classes.iconButton}>
             <AccountCircle />
@@ -160,19 +169,6 @@ const Navigation: FC = () => {
           <Typography className={classes.title} variant="h6" noWrap>
             Dev learning
           </Typography>
-          <div className={classes.search}>
-            <div className={classes.searchIcon}>
-              <Search />
-            </div>
-            <InputBase
-              placeholder="Search…"
-              classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput,
-              }}
-            />
-          </div>
-          <div className={classes.grow} />
           {renderMenu()}
         </Toolbar>
       </AppBar>
