@@ -16,7 +16,8 @@ import {
 } from '@material-ui/core'
 
 import { getUserSubjects } from 'data/api/subjects'
-import { Subject as SubjectType } from 'types/models/subject'
+import { UserSubject as UserSubjectType } from 'types/models/userSubject'
+import { Subject } from 'types/models/subject'
 import { UserContext } from 'App'
 
 import { useStyles } from './styles'
@@ -24,13 +25,14 @@ import { useStyles } from './styles'
 const Profile: FC = () => {
   const classes = useStyles()
   const [value, setValue] = useState(0)
-  const [userSubjects, setUserSubjects] = useState<Array<SubjectType> | null>(null)
+  const [userSubjects, setUserSubjects] = useState<Array<UserSubjectType> | null>(null)
+  const [isCurrentUser, setIsCurrentUser] = useState<boolean>(true)
   const user = useContext(UserContext)
 
   const fetchUserSubjects = useCallback(async () => {
     if (!user?.id) return
 
-    const fetchedUserSubjects = await getUserSubjects(user!.id)
+    const fetchedUserSubjects = await getUserSubjects(user.id)
 
     if (!fetchedUserSubjects) return
 
@@ -75,21 +77,29 @@ const Profile: FC = () => {
     )
   }
 
+  function renderEditButton() {
+    if (isCurrentUser)
+      return <Chip className={classes.editButton} color="primary" label="Edit Info" />
+  }
+
   function renderBasicInfo() {
-    return (
-      <>
-        {renderSectionTitle('First Name')}
-        {renderSectionBody(user!.firstName)}
-        {renderSectionTitle('Last Name')}
-        {renderSectionBody(user!.lastName)}
-        {renderSectionTitle('Email')}
-        {renderSectionBody(user!.email)}
-        {renderSectionTitle('Role')}
-        {renderSectionBody(user!.role.toString())}
-        {renderSectionTitle('Team Name')}
-        {renderSectionBody(user!.teamId?.toString())}
-      </>
-    )
+    if (user !== null)
+      return (
+        <>
+          {renderSectionTitle('First Name')}
+          {renderSectionBody(user.firstName)}
+          {renderSectionTitle('Last Name')}
+          {renderSectionBody(user.lastName)}
+          {renderSectionTitle('Email')}
+          {renderSectionBody(user.email)}
+          {renderSectionTitle('Role')}
+          {renderSectionBody(user.role.toString())}
+          {renderSectionTitle('Team Name')}
+          {renderSectionBody(user.teamId?.toString())}
+          {renderEditButton()}
+        </>
+      )
+    return null
   }
 
   function renderTabs() {
@@ -109,21 +119,25 @@ const Profile: FC = () => {
     )
   }
 
+  function renderChip(subject: Subject, isLearned: boolean) {
+    if (isLearned) return <Chip color="primary" label={subject.title} className={classes.subject} />
+    return <Chip color="secondary" label={subject.title} className={classes.subject} />
+  }
+
   function renderSubjectList() {
-    return (
-      <GridList cellHeight={45} cols={1} className={classes.gridList}>
-        {userSubjects!.map(({ title }) => (
-          <GridListTile key={title}>
-            <Chip color="primary" label={title} className={classes.subject} />
-          </GridListTile>
-        ))}
-      </GridList>
-    )
+    if (userSubjects !== null)
+      return (
+        <GridList cellHeight={45} cols={1} className={classes.gridList}>
+          {userSubjects.map(({ subject, isLearned }) => (
+            <GridListTile key={subject.id}>{renderChip(subject, isLearned)}</GridListTile>
+          ))}
+        </GridList>
+      )
+    return null
   }
 
   function renderInsideTab() {
     if (value === 0) return renderBasicInfo()
-    // if (value === 1) return renderLearnedSubjets()
     return renderSubjectList()
   }
 

@@ -1,15 +1,16 @@
 import { Subject } from 'types/models/subject'
 
+import { UserSubject } from 'types/models/userSubject'
 import api from './api'
 
 const SUBJECTS_API_ENDPOINT = 'subjects'
 const SUBJECT_API_ENDPOINT = 'subjects/:id'
 
-const USER_SUBJECTS_API_ENDPOINT = 'subjects/user/:id'
+const USER_SUBJECTS_API_ENDPOINT = 'UserSubjects/User/:id'
 
 export const getUserSubjects = async (id: number) => {
   try {
-    const response = await api.get<Array<Subject>>(
+    const response = await api.get<Array<UserSubject>>(
       USER_SUBJECTS_API_ENDPOINT.replace(':id', id.toString()),
     )
 
