@@ -5,6 +5,20 @@ import api from './api'
 const SUBJECTS_API_ENDPOINT = 'subjects'
 const SUBJECT_API_ENDPOINT = 'subjects/:id'
 
+const USER_SUBJECTS_API_ENDPOINT = 'subjects/user/:id'
+
+export const getUserSubjects = async (id: number) => {
+  try {
+    const response = await api.get<Array<Subject>>(
+      USER_SUBJECTS_API_ENDPOINT.replace(':id', id.toString()),
+    )
+
+    return response.data
+  } catch (ex) {
+    return null
+  }
+}
+
 export const getSubjects = async () => {
   try {
     const response = await api.get<Array<Subject>>(SUBJECTS_API_ENDPOINT)

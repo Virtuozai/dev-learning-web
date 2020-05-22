@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { FC, useCallback, useState, useContext, useEffect } from 'react'
 
 import {
   Tab,
@@ -15,49 +15,31 @@ import {
   GridListTile,
 } from '@material-ui/core'
 
-import { User, UserRole } from 'types/models/user'
-import { Subject } from 'types/models/subject'
+import { getUserSubjects } from 'data/api/subjects'
+import { Subject as SubjectType } from 'types/models/subject'
+import { UserContext } from 'App'
+
 import { useStyles } from './styles'
 
 const Profile: FC = () => {
   const classes = useStyles()
-  const [value, setValue] = React.useState(0)
+  const [value, setValue] = useState(0)
+  const [userSubjects, setUserSubjects] = useState<Array<SubjectType> | null>(null)
+  const user = useContext(UserContext)
 
-  const user: User = {
-    id: 1,
-    firstName: 'jeff',
-    lastName: 'jefferson',
-    email: 'yo@gmail.com',
-    team: { id: 1, name: 'genericTeam' },
-    teamId: 1,
-    role: UserRole.Junior,
-  }
+  const fetchUserSubjects = useCallback(async () => {
+    if (!user?.id) return
 
-  const subject: Subject = {
-    title: 'subjectRandom',
-    description: 'THis is a very nice subject',
-  }
+    const fetchedUserSubjects = await getUserSubjects(user!.id)
 
-  const subject2: Subject = {
-    title: 'subjectRandom2',
-    description: 'THis is a very nice subject2',
-  }
+    if (!fetchedUserSubjects) return
 
-  const data1 = [
-    subject,
-    subject2,
-    subject,
-    subject2,
-    subject,
-    subject2,
-    subject,
-    subject2,
-    subject,
-    subject2,
-    subject,
-    subject2,
-    subject,
-  ]
+    setUserSubjects(fetchedUserSubjects)
+  }, [user])
+
+  useEffect(() => {
+    fetchUserSubjects()
+  }, [fetchUserSubjects])
 
   function renderTitle() {
     const titleText = 'My Profile'
@@ -97,15 +79,15 @@ const Profile: FC = () => {
     return (
       <>
         {renderSectionTitle('First Name')}
-        {renderSectionBody(user.firstName)}
+        {renderSectionBody(user!.firstName)}
         {renderSectionTitle('Last Name')}
-        {renderSectionBody(user.lastName)}
+        {renderSectionBody(user!.lastName)}
         {renderSectionTitle('Email')}
-        {renderSectionBody(user.email)}
+        {renderSectionBody(user!.email)}
         {renderSectionTitle('Role')}
-        {renderSectionBody(user.role.toString())}
+        {renderSectionBody(user!.role.toString())}
         {renderSectionTitle('Team Name')}
-        {renderSectionBody(user.teamId.toString())}
+        {renderSectionBody(user!.teamId?.toString())}
       </>
     )
   }
@@ -130,7 +112,7 @@ const Profile: FC = () => {
   function renderSubjectList() {
     return (
       <GridList cellHeight={45} cols={1} className={classes.gridList}>
-        {data1.map(({ title }) => (
+        {userSubjects!.map(({ title }) => (
           <GridListTile key={title}>
             <Chip color="primary" label={title} className={classes.subject} />
           </GridListTile>
