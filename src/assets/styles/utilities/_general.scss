@@ -34,10 +34,22 @@
   flex-direction: column;
 }
 
+.u-flex-wrap {
+  flex-wrap: wrap;
+}
+
 .u-align-items-center {
   align-items: center;
 }
 
 .u-fill-width {
   width: 100%;
+}
+
+.u-position-relative {
+  position: relative;
+}
+
+.u-position-absolute {
+  position: absolute;
 }

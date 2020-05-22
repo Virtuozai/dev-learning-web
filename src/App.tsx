@@ -1,54 +1,69 @@
-import React, { FC, useState } from 'react'
+import React, { FC, useState, createContext, useEffect } from 'react'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import { CssBaseline } from '@material-ui/core'
 
 import { Header, Navigation, PrivateRoute } from 'components'
-import { Login, Profile, Members } from 'pages'
+import { Login, Profile, Members, Learning, Subject } from 'pages'
 
 import { getCurrentUser } from 'data/api/users'
 
-import { HOME, PROFILE, MEMBERS, LOGIN_PAGE } from 'constants/routes'
+import * as routes from 'constants/routes'
+import { User } from 'types/models/user'
+
+export const UserContext = createContext<User | null>(null)
 
 const App: FC = () => {
   const [isLoggedOn, setIsLoggedOn] = useState(true)
+  const [user, setUser] = useState<User | null>(null)
 
   const checkIfLoggedOn = async () => {
     const response = await getCurrentUser()
 
-    if (!response) {
+    if (!response || !response.data) {
       setIsLoggedOn(false)
 
       return response
     }
 
     setIsLoggedOn(true)
+    setUser(response.data)
 
     return response
   }
 
-  checkIfLoggedOn()
+  useEffect(() => {
+    checkIfLoggedOn()
+  }, [])
 
   return (
-    <Router>
-      <CssBaseline />
-      {isLoggedOn && <Navigation checkIfLoggedOn={checkIfLoggedOn} />}
-      <Switch>
-        {!isLoggedOn && (
-          <Route path={LOGIN_PAGE} exact>
-            <Login checkIfLoggedOn={checkIfLoggedOn} />
-          </Route>
-        )}
-        <PrivateRoute isLoggedOn={isLoggedOn} path={PROFILE}>
-          <Profile />
-        </PrivateRoute>
-        <PrivateRoute isLoggedOn={isLoggedOn} path={MEMBERS}>
-          <Members />
-        </PrivateRoute>
-        <PrivateRoute isLoggedOn={isLoggedOn} path={HOME}>
-          <Header buttonText="I am button text" />
-        </PrivateRoute>
-      </Switch>
-    </Router>
+    <UserContext.Provider value={user}>
+      <Router>
+        <CssBaseline />
+        {isLoggedOn && <Navigation checkIfLoggedOn={checkIfLoggedOn} />}
+        <Switch>
+          {!isLoggedOn && (
+            <Route path={routes.LOGIN_PAGE} exact>
+              <Login checkIfLoggedOn={checkIfLoggedOn} />
+            </Route>
+          )}
+          <PrivateRoute isLoggedOn={isLoggedOn} path={routes.PROFILE}>
+            <Profile />
+          </PrivateRoute>
+          <PrivateRoute isLoggedOn={isLoggedOn} path={routes.MEMBERS}>
+            <Members />
+          </PrivateRoute>
+          <PrivateRoute isLoggedOn={isLoggedOn} path={routes.LEARNING}>
+            <Learning />
+          </PrivateRoute>
+          <PrivateRoute isLoggedOn={isLoggedOn} path={routes.SUBJECT}>
+            <Subject />
+          </PrivateRoute>
+          <PrivateRoute isLoggedOn={isLoggedOn} path={routes.HOME}>
+            <Header buttonText="I am button text" />
+          </PrivateRoute>
+        </Switch>
+      </Router>
+    </UserContext.Provider>
   )
 }
 
