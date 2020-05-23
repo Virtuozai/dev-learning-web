@@ -4,3 +4,11 @@ export type Subject = {
   description: string
   parentId: number
 }
+
+export type UserSubject = {
+  id: number
+  isLearned: boolean
+  endDateTime: Date
+  startDateTime: Date
+  subject: Subject
+}

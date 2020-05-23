@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import { CssBaseline } from '@material-ui/core'
 
 import { Navigation, PrivateRoute } from 'components'
-import { Login, Profile, Members, Learning, Subject } from 'pages'
+import { Login, Profile, Members, Learning, Subject, Calendar, UserSubject } from 'pages'
 
 import { getCurrentUser } from 'data/api/users'
 
@@ -19,7 +19,7 @@ const App: FC = () => {
   const checkIfLoggedOn = async () => {
     const response = await getCurrentUser()
 
-    if (!response || !response.data) {
+    if (!response?.data) {
       setIsLoggedOn(false)
 
       return response
@@ -57,6 +57,12 @@ const App: FC = () => {
           </PrivateRoute>
           <PrivateRoute isLoggedOn={isLoggedOn} path={routes.SUBJECT}>
             <Subject />
+          </PrivateRoute>
+          <PrivateRoute isLoggedOn={isLoggedOn} path={routes.USER_SUBJECT}>
+            <UserSubject />
+          </PrivateRoute>
+          <PrivateRoute isLoggedOn={isLoggedOn} path={routes.CALENDAR}>
+            <Calendar />
           </PrivateRoute>
         </Switch>
       </Router>
