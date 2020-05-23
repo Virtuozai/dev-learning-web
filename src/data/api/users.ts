@@ -94,11 +94,18 @@ export const logout = async () => {
   }
 }
 
-export const addSubjectToUser = async (userId: number, subjectId: number) => {
+export const addSubjectToUser = async (
+  userId: number,
+  subjectId: number,
+  startDateTime: Date,
+  endDateTime: Date,
+) => {
   try {
     const response = await api.post(USER_SUBJECT_API_ENDPOINT, {
       userId,
       subjectId,
+      startDateTime,
+      endDateTime,
     })
 
     return response
