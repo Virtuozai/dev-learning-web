@@ -13,7 +13,7 @@ import {
 import { LockOutlined } from '@material-ui/icons'
 import { Alert } from '@material-ui/lab'
 
-import { HOME } from 'constants/routes'
+import { LEARNING } from 'constants/routes'
 
 import { login, register } from 'data/api/users'
 
@@ -161,7 +161,7 @@ const Login: FC<Props> = ({ checkIfLoggedOn }: Props) => {
 
     await checkIfLoggedOn()
 
-    history.push(HOME)
+    history.push(LEARNING)
   }
 
   const handleRegister = async () => {
@@ -178,7 +178,7 @@ const Login: FC<Props> = ({ checkIfLoggedOn }: Props) => {
 
     await checkIfLoggedOn()
 
-    history.push(HOME)
+    history.push(LEARNING)
   }
 
   function handleFormSubmit(event: FormEvent<HTMLFormElement>) {

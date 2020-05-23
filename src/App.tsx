@@ -2,7 +2,7 @@ import React, { FC, useState, createContext, useEffect } from 'react'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import { CssBaseline } from '@material-ui/core'
 
-import { Header, Navigation, PrivateRoute } from 'components'
+import { Navigation, PrivateRoute } from 'components'
 import { Login, Profile, Members, Learning, Subject } from 'pages'
 
 import { getCurrentUser } from 'data/api/users'
@@ -57,9 +57,6 @@ const App: FC = () => {
           </PrivateRoute>
           <PrivateRoute isLoggedOn={isLoggedOn} path={routes.SUBJECT}>
             <Subject />
-          </PrivateRoute>
-          <PrivateRoute isLoggedOn={isLoggedOn} path={routes.HOME}>
-            <Header buttonText="I am button text" />
           </PrivateRoute>
         </Switch>
       </Router>
