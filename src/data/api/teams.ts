@@ -13,3 +13,13 @@ export const getTeams = async () => {
     return null
   }
 }
+
+export const createTeam = async (name: string, description: string, teamLeadId: number) => {
+  try {
+    const response = await api.post(TEAMS_API_ENDPOINT, { name, description, teamLeadId })
+
+    return response
+  } catch (ex) {
+    return null
+  }
+}

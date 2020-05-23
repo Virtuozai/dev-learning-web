@@ -1,4 +1,5 @@
 import { User } from 'types/models/user'
+import { Calendar } from 'types/models/calendar'
 
 import api from './api'
 
@@ -9,10 +10,23 @@ const CURRENT_USER_API_ENDPOINT = 'users/current_user'
 const LOGOUT_USER_API_ENDPOINT = 'users/logout'
 const TEAM_USERS_API_ENDPOINT = 'users/team_users/:id'
 const USER_SUBJECT_API_ENDPOINT = 'usersubjects'
+const USER_CALENDAR_API_ENDPOINT = 'users/:id/calendar'
 
 export const getUser = async (id: number) => {
   try {
     const response = await api.get<User>(USER_API_ENDPOINT.replace(':id', id.toString()))
+
+    return response.data
+  } catch (ex) {
+    return null
+  }
+}
+
+export const getUserCalendar = async (id: number) => {
+  try {
+    const response = await api.get<Array<Calendar>>(
+      USER_CALENDAR_API_ENDPOINT.replace(':id', id.toString()),
+    )
 
     return response.data
   } catch (ex) {
