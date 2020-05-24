@@ -18,8 +18,10 @@ import {
   InputLabel,
   MenuItem,
 } from '@material-ui/core'
-import { Edit, Save, Cancel, People, Send, Add } from '@material-ui/icons'
+import { Edit, Save, Cancel, People, Send, Add, Book } from '@material-ui/icons'
 import { Alert } from '@material-ui/lab'
+import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers'
+import DateFnsUtils from '@date-io/date-fns'
 
 import { getSubject, updateSubject } from 'data/api/subjects'
 import { getSubjectComments, createComment, updateComment } from 'data/api/comments'
@@ -53,6 +55,10 @@ const Subject: FC = () => {
   const [isSelectUserModalOpen, setIsSelectUserModalOpen] = useState<boolean>(false)
   const [teamUsers, setTeamUsers] = useState<Array<User>>([])
   const [selectedTeamUserId, setSelectedTeamUserId] = useState<number | null>(null)
+  const [startDate, setStartDate] = useState<Date | null>(new Date())
+  const [endDate, setEndDate] = useState<Date | null>(new Date())
+
+  const [isLearnModalOpen, setIsLearnModalOpen] = useState<boolean>(false)
 
   const [error, setError] = useState<string | null>(null)
 
@@ -294,12 +300,32 @@ const Subject: FC = () => {
       text: newComment,
     })
 
-    if (!response?.data) setError('Failed to send your message')
+    if (!response?.data) {
+      setError('Failed to send your message')
+
+      return
+    }
 
     await fetchComments()
 
     setNewComment('')
     setError(null)
+  }
+
+  function compareDates(dateOne: Date, dateTwo: Date) {
+    if (dateOne.getFullYear() > dateTwo.getFullYear()) return false
+
+    if (dateOne.getMonth() > dateTwo.getMonth() && dateOne.getFullYear() === dateTwo.getFullYear())
+      return false
+
+    if (
+      dateOne.getDate() > dateTwo.getDate() &&
+      dateOne.getMonth() === dateTwo.getMonth() &&
+      dateOne.getFullYear() === dateTwo.getFullYear()
+    )
+      return false
+
+    return true
   }
 
   function renderWriteCommentBlock() {
@@ -385,11 +411,69 @@ const Subject: FC = () => {
       return
     }
 
-    const response = await addSubjectToUser(selectedTeamUserId, Number(id))
+    if (
+      !startDate ||
+      !endDate ||
+      !compareDates(new Date(), startDate) ||
+      !compareDates(new Date(), endDate)
+    ) {
+      setError('Selected date cannot be in the past')
+
+      return
+    }
+
+    if (!compareDates(startDate, endDate)) {
+      setError('End date cannot be before start date')
+
+      return
+    }
+
+    const response = await addSubjectToUser(selectedTeamUserId, Number(id), startDate, endDate)
 
     if (response?.status !== 204) setError('Something went wrong')
 
     setIsSelectUserModalOpen(false)
+    setError(null)
+  }
+
+  async function assignSubjectToYourself() {
+    if (!user) {
+      setError('No user')
+
+      return
+    }
+
+    if (
+      !startDate ||
+      !endDate ||
+      !compareDates(new Date(), startDate) ||
+      !compareDates(new Date(), endDate)
+    ) {
+      setError('Selected date cannot be in the past')
+
+      return
+    }
+
+    if (!compareDates(startDate, endDate)) {
+      setError('End date cannot be before start date')
+
+      return
+    }
+
+    const response = await addSubjectToUser(user.id, Number(id), startDate, endDate)
+
+    if (response?.status !== 204) setError('Something went wrong')
+
+    setIsLearnModalOpen(false)
+    setError(null)
+  }
+
+  const handleDateChange = (date: Date | null) => {
+    setStartDate(date)
+  }
+
+  const handleEndDateChange = (date: Date | null) => {
+    setEndDate(date)
   }
 
   function renderAddSubjectModal() {
@@ -410,20 +494,47 @@ const Subject: FC = () => {
               id="parent-select"
               value={selectedTeamUserId || ''}
               onChange={handleUserSelect}
+              MenuProps={{ style: { maxHeight: 400 } }}
             >
-              <div className={classes.scrollable}>
-                {teamUsers.map(({ id: userId, firstName, lastName }) => (
-                  <MenuItem key={userId} value={userId}>
-                    <Avatar>
-                      {firstName[0]}
-                      {lastName[0]}
-                    </Avatar>
-                    {firstName} {lastName}
-                  </MenuItem>
-                ))}
-              </div>
+              {teamUsers.map(({ id: userId, firstName, lastName }) => (
+                <MenuItem key={userId} value={userId}>
+                  <Avatar>
+                    {firstName[0]}
+                    {lastName[0]}
+                  </Avatar>
+                  {firstName} {lastName}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
+
+          <MuiPickersUtilsProvider utils={DateFnsUtils}>
+            <KeyboardDatePicker
+              className="u-fill-width"
+              margin="normal"
+              id="date-picker-dialog"
+              label="Start date"
+              format="MM/dd/yyyy"
+              value={startDate}
+              onChange={handleDateChange}
+              KeyboardButtonProps={{
+                'aria-label': 'change date',
+              }}
+            />
+
+            <KeyboardDatePicker
+              className="u-fill-width"
+              margin="normal"
+              id="date-picker-dialog"
+              label="End date"
+              format="MM/dd/yyyy"
+              value={endDate}
+              onChange={handleEndDateChange}
+              KeyboardButtonProps={{
+                'aria-label': 'change date',
+              }}
+            />
+          </MuiPickersUtilsProvider>
 
           <Button
             className={classes.betweenBlocks}
@@ -445,10 +556,80 @@ const Subject: FC = () => {
     )
   }
 
+  function handleLearnModalClose() {
+    setIsLearnModalOpen(false)
+  }
+
+  function handleOpenLearnModal() {
+    setIsLearnModalOpen(true)
+  }
+
+  function renderLearnModal() {
+    return (
+      <Dialog open={isLearnModalOpen} onClose={handleLearnModalClose}>
+        <Container>
+          <MuiPickersUtilsProvider utils={DateFnsUtils}>
+            <KeyboardDatePicker
+              className="u-fill-width"
+              margin="normal"
+              id="date-picker-dialog"
+              label="Start date"
+              format="MM/dd/yyyy"
+              value={startDate}
+              onChange={handleDateChange}
+              KeyboardButtonProps={{
+                'aria-label': 'change date',
+              }}
+            />
+
+            <KeyboardDatePicker
+              className="u-fill-width"
+              margin="normal"
+              id="date-picker-dialog"
+              label="End date"
+              format="MM/dd/yyyy"
+              value={endDate}
+              onChange={handleEndDateChange}
+              KeyboardButtonProps={{
+                'aria-label': 'change date',
+              }}
+            />
+          </MuiPickersUtilsProvider>
+
+          <Button
+            className={classes.betweenBlocks}
+            variant="contained"
+            color="secondary"
+            startIcon={<Add />}
+            fullWidth
+            onClick={assignSubjectToYourself}
+          >
+            Learn
+          </Button>
+        </Container>
+        {error && (
+          <Alert variant="filled" severity="error">
+            {error}
+          </Alert>
+        )}
+      </Dialog>
+    )
+  }
+
   return (
     <>
       <Container className={classes.top}>
         <Paper elevation={6}>
+          <Button
+            className={classes.betweenBlocks}
+            color="primary"
+            size="small"
+            variant="contained"
+            startIcon={<Book />}
+            onClick={handleOpenLearnModal}
+          >
+            Learn
+          </Button>
           {renderTitle()}
           <Divider />
           <div className={classes.horizontal}>
@@ -489,6 +670,7 @@ const Subject: FC = () => {
         </Paper>
       </Container>
       {renderAddSubjectModal()}
+      {renderLearnModal()}
       <Snackbar open={error !== null}>
         <Alert variant="filled" severity="error">
           {error}

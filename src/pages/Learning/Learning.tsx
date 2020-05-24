@@ -179,17 +179,16 @@ const Learning: FC = () => {
             <Select
               labelId="parent-select-label"
               id="parent-select"
-              value={newSubjectParentId || ''}
+              value={newSubjectParentId || -1}
               onChange={handleParentSelect}
+              MenuProps={{ style: { maxHeight: 400 } }}
             >
-              <div className={classes.scrollable}>
-                <MenuItem value={-1}>None</MenuItem>
-                {subjectIds.map(id => (
-                  <MenuItem key={id} value={id}>
-                    {subjects[id].title}
-                  </MenuItem>
-                ))}
-              </div>
+              <MenuItem value={-1}>None</MenuItem>
+              {subjectIds.map(id => (
+                <MenuItem key={id} value={id}>
+                  {subjects[id].title}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
 
@@ -244,7 +243,7 @@ const Learning: FC = () => {
         renderedParentIds.push(parentId)
 
         const renderedSubject = (
-          <Link to={SUBJECT.replace(':id', id.toString())}>
+          <Link to={SUBJECT.replace(':id', id.toString())} key={id}>
             <Chip key={id} color="primary" label={subjects[id].title} clickable />
           </Link>
         )

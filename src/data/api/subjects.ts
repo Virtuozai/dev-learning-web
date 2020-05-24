@@ -1,10 +1,11 @@
-import { Subject } from 'types/models/subject'
+import { Subject, UserSubject } from 'types/models/subject'
 
 import { UserSubject } from 'types/models/userSubject'
 import api from './api'
 
 const SUBJECTS_API_ENDPOINT = 'subjects'
 const SUBJECT_API_ENDPOINT = 'subjects/:id'
+const USER_SUBJECT_API_ENDPOINT = 'userSubjects/:id'
 
 const USER_SUBJECTS_API_ENDPOINT = 'UserSubjects/User/:id'
 
@@ -65,6 +66,29 @@ export type UpdateSubjectArgs = {
 export const updateSubject = async (args: UpdateSubjectArgs) => {
   try {
     const response = await api.put(SUBJECT_API_ENDPOINT.replace(':id', args.id), args)
+
+    return response
+  } catch (ex) {
+    return null
+  }
+}
+
+export const getUserSubject = async (id: string) => {
+  try {
+    const response = await api.get<UserSubject>(USER_SUBJECT_API_ENDPOINT.replace(':id', id))
+
+    return response.data
+  } catch (ex) {
+    return null
+  }
+}
+
+export const updateUserSubject = async (userSubject: UserSubject) => {
+  try {
+    const response = await api.put(
+      USER_SUBJECT_API_ENDPOINT.replace(':id', userSubject.id.toString()),
+      userSubject,
+    )
 
     return response
   } catch (ex) {

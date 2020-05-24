@@ -1,4 +1,5 @@
 import React, { FC } from 'react'
+import { Link } from 'react-router-dom'
 import {
   Grid,
   Typography,
@@ -12,6 +13,8 @@ import {
 
 import { User } from 'types/models/user'
 
+import { USER, TEAM } from 'constants/routes'
+
 import { useStyles } from './styles'
 
 type Props = {
@@ -21,13 +24,17 @@ type Props = {
 const Members: FC<Props> = ({ user }: Props) => {
   const classes = useStyles()
 
-  const { firstName, lastName, email, team } = user
+  const { id, firstName, lastName, email, team, teamId } = user
 
   return (
     <Card className={classes.memberItem}>
       <CardHeader
         avatar={<Avatar>{firstName[0] + lastName[0]}</Avatar>}
-        title={<Button size="small">{`${firstName} ${lastName}`}</Button>}
+        title={
+          <Link to={USER.replace(':id', id.toString())}>
+            <Button size="small">{`${firstName} ${lastName}`}</Button>
+          </Link>
+        }
       />
       <Divider />
       <CardContent>
@@ -37,9 +44,15 @@ const Members: FC<Props> = ({ user }: Props) => {
         </Grid>
         <Grid container alignItems="center">
           <Typography variant="h6">Team:</Typography>
-          <Button size="small" className={classes.alignRight}>
-            {team?.name || 'User has no team'}
-          </Button>
+          {teamId ? (
+            <Link to={TEAM.replace(':id', teamId.toString())} className={classes.alignRight}>
+              <Button size="small">{team?.name || 'User has no team'}</Button>
+            </Link>
+          ) : (
+            <Button size="small" className={classes.alignRight}>
+              User has no team
+            </Button>
+          )}
         </Grid>
       </CardContent>
     </Card>

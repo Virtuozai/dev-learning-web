@@ -5,6 +5,7 @@ import api from './api'
 const COMMENT_API_ENDPOINT = 'comments'
 const SUBJECT_COMMENTS_API_ENDPOINT = 'comments/subject/:id'
 const UPDATE_COMMENT_API_ENDPOINT = 'comments/:id'
+const USER_SUBJECT_API_ENDPOINT = 'comments/userSubject/:id'
 
 export const getSubjectComments = async (id: string) => {
   try {
@@ -16,10 +17,21 @@ export const getSubjectComments = async (id: string) => {
   }
 }
 
+export const getUserSubjectComments = async (id: string) => {
+  try {
+    const response = await api.get<Array<Comment>>(USER_SUBJECT_API_ENDPOINT.replace(':id', id))
+
+    return response.data
+  } catch (ex) {
+    return null
+  }
+}
+
 export type CreateCommentArgs = {
-  subjectId: number
+  subjectId?: number
   text: string
-  userId: number
+  userId?: number
+  userSubjectId?: number
 }
 
 export const createComment = async (args: CreateCommentArgs) => {
