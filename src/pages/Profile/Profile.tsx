@@ -26,7 +26,7 @@ const Profile: FC = () => {
   const classes = useStyles()
   const [value, setValue] = useState(0)
   const [userSubjects, setUserSubjects] = useState<Array<UserSubjectType> | null>(null)
-  const [isCurrentUser, setIsCurrentUser] = useState<boolean>(true)
+  const [isCurrentUser] = useState<boolean>(true)
   const user = useContext(UserContext)
 
   const fetchUserSubjects = useCallback(async () => {
@@ -78,8 +78,9 @@ const Profile: FC = () => {
   }
 
   function renderEditButton() {
-    if (isCurrentUser)
-      return <Chip className={classes.editButton} color="primary" label="Edit Info" />
+    if (!isCurrentUser) return null
+
+    return <Chip className={classes.editButton} color="primary" label="Edit Info" />
   }
 
   function renderBasicInfo() {
