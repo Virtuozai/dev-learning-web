@@ -15,19 +15,39 @@ import {
   GridListTile,
 } from '@material-ui/core'
 
+import { useParams } from 'react-router-dom'
+
 import { getUserSubjects } from 'data/api/subjects'
-import { UserSubject as UserSubjectType } from 'types/models/userSubject'
-import { Subject } from 'types/models/subject'
+import { getUser } from 'data/api/users'
+import { Subject, UserSubject as UserSubjectType } from 'types/models/subject'
+import { User as UserType } from 'types/models/user'
+
 import { UserContext } from 'App'
 
 import { useStyles } from './styles'
 
 const Profile: FC = () => {
+  const { id } = useParams()
   const classes = useStyles()
   const [value, setValue] = useState(0)
   const [userSubjects, setUserSubjects] = useState<Array<UserSubjectType> | null>(null)
-  const [isCurrentUser] = useState<boolean>(true)
-  const user = useContext(UserContext)
+  const [isCurrentUser, setIsCurrentUser] = useState<boolean>(true)
+  const currentUser = useContext(UserContext)
+  const [user, setUser] = useState<UserType | null>(currentUser)
+
+  const fetchUser = useCallback(async () => {
+    if (!id) return
+    const idInt = parseInt(id, 10)
+    const fetchUserById = await getUser(idInt)
+    setIsCurrentUser(false)
+
+    if (!fetchUserById) return
+    setUser(fetchUserById)
+  }, [id])
+
+  useEffect(() => {
+    fetchUser()
+  }, [fetchUser])
 
   const fetchUserSubjects = useCallback(async () => {
     if (!user?.id) return
@@ -44,11 +64,10 @@ const Profile: FC = () => {
   }, [fetchUserSubjects])
 
   function renderTitle() {
-    const titleText = 'My Profile'
-
+    const userProfile = user?.firstName + ' ' + user?.lastName + ' Profile'
     return (
       <Typography component="h1" variant="h5">
-        {titleText}
+        {isCurrentUser ? 'My Profile' : userProfile}
       </Typography>
     )
   }

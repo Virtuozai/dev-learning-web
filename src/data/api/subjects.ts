@@ -1,6 +1,5 @@
 import { Subject, UserSubject } from 'types/models/subject'
 
-import { UserSubject } from 'types/models/userSubject'
 import api from './api'
 
 const SUBJECTS_API_ENDPOINT = 'subjects'
