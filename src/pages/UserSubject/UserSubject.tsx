@@ -17,9 +17,9 @@ import { Edit, Save, People, Send } from '@material-ui/icons'
 import { Alert } from '@material-ui/lab'
 
 import { getUserSubjectComments, createComment, updateComment } from 'data/api/comments'
-import { getUserSubject, updateUserSubject } from 'data/api/subjects'
+import { getUserSubject, updateUserSubject, getSubject } from 'data/api/subjects'
 
-import { UserSubject as UserSubjectType } from 'types/models/subject'
+import { UserSubject as UserSubjectType, Subject } from 'types/models/subject'
 import { Comment } from 'types/models/comment'
 import { UserRole } from 'types/models/user'
 
@@ -35,6 +35,7 @@ const UserSubject: FC = () => {
   const canUserEdit = user?.role === UserRole.God
 
   const [userSubject, setUserSubject] = useState<UserSubjectType | null>(null)
+  const [subject, setSubject] = useState<Subject | null>(null)
 
   const [comments, setComments] = useState<Array<Comment>>([])
   const [newComment, setNewComment] = useState<string>('')
@@ -47,11 +48,17 @@ const UserSubject: FC = () => {
   const fetchSubject = useCallback(async () => {
     if (!subjectId) return
 
-    const fetchedSubject = await getUserSubject(subjectId)
+    const fetchedUserSubject = await getUserSubject(subjectId)
+
+    if (!fetchedUserSubject) return
+
+    setUserSubject(fetchedUserSubject)
+
+    const fetchedSubject = await getSubject(fetchedUserSubject.subjectId.toString())
 
     if (!fetchedSubject) return
 
-    setUserSubject(fetchedSubject)
+    setSubject(fetchedSubject)
   }, [subjectId])
 
   const fetchComments = useCallback(async () => {
@@ -73,11 +80,11 @@ const UserSubject: FC = () => {
   }, [fetchComments])
 
   function renderTitle() {
-    if (!userSubject?.subject) return null
+    if (!subject) return null
 
     return (
       <Typography className={classes.between} variant="h3" align="center">
-        {userSubject.subject.title}
+        {subject?.title}
       </Typography>
     )
   }
@@ -196,10 +203,15 @@ const UserSubject: FC = () => {
 
     const response = await createComment({
       userSubjectId: Number(subjectId),
+      userId: Number(user.id),
       text: newComment,
     })
 
-    if (!response?.data) setError('Failed to send your message')
+    if (!response?.data) {
+      setError('Failed to send your message')
+
+      return
+    }
 
     await fetchComments()
 
@@ -218,6 +230,7 @@ const UserSubject: FC = () => {
       return
     }
 
+    setError(null)
     setSuccess('Subject successfully marked as learnt')
   }
 
@@ -255,9 +268,7 @@ const UserSubject: FC = () => {
           {renderTitle()}
           <Divider />
           <div className={classes.horizontal}>
-            <Typography className={classes.betweenBlocks}>
-              {userSubject?.subject?.description}
-            </Typography>
+            <Typography className={classes.betweenBlocks}>{subject?.description}</Typography>
 
             {(canUserEdit || user?.role === UserRole.TeamLead) && (
               <Button

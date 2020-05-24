@@ -1,19 +1,32 @@
 import React, { FC, MouseEvent, useState } from 'react'
 import { Link, useHistory } from 'react-router-dom'
-import { AppBar, Toolbar, Typography, Menu, MenuItem, IconButton, Badge } from '@material-ui/core'
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  Menu,
+  MenuItem,
+  IconButton,
+  Badge,
+  Switch,
+} from '@material-ui/core'
 import { Menu as MenuIcon, AccountCircle, LocalLibrary, Event, People } from '@material-ui/icons'
 
 import { logout } from 'data/api/users'
 
 import * as routes from 'constants/routes'
 
+import { setItem } from 'libs/utils/localStorageManager'
+
 import { useStyles } from './styles'
 
 type Props = {
   checkIfLoggedOn: () => void
+  isDarkMode: boolean
+  checkIfDarkMode: () => void
 }
 
-const Navigation: FC<Props> = ({ checkIfLoggedOn }: Props) => {
+const Navigation: FC<Props> = ({ checkIfLoggedOn, isDarkMode, checkIfDarkMode }: Props) => {
   const classes = useStyles()
 
   const history = useHistory()
@@ -158,6 +171,17 @@ const Navigation: FC<Props> = ({ checkIfLoggedOn }: Props) => {
             <MenuIcon />
           </IconButton>
         </div>
+
+        <Switch
+          checked={isDarkMode}
+          onChange={() => {
+            setItem('dark', isDarkMode ? 'disabled' : 'enabled')
+
+            checkIfDarkMode()
+          }}
+          name="dark mode switch"
+          inputProps={{ 'aria-label': 'secondary checkbox' }}
+        />
       </>
     )
   }
