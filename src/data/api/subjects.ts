@@ -4,7 +4,7 @@ import api from './api'
 
 const SUBJECTS_API_ENDPOINT = 'subjects'
 const SUBJECT_API_ENDPOINT = 'subjects/:id'
-const USER_SUBJECT_API_ENDPOINT = 'userSubject/:id'
+const USER_SUBJECT_API_ENDPOINT = 'userSubjects/:id'
 
 export const getSubjects = async () => {
   try {

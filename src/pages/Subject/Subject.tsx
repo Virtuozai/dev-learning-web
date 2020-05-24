@@ -300,7 +300,11 @@ const Subject: FC = () => {
       text: newComment,
     })
 
-    if (!response?.data) setError('Failed to send your message')
+    if (!response?.data) {
+      setError('Failed to send your message')
+
+      return
+    }
 
     await fetchComments()
 
