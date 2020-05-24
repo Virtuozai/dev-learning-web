@@ -1,7 +1,7 @@
 import React, { FC, useState, createContext, useEffect, useMemo } from 'react'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import { CssBaseline, ThemeProvider, createMuiTheme } from '@material-ui/core'
-import { blueGrey, blue } from '@material-ui/core/colors'
+import { blueGrey, blue, grey } from '@material-ui/core/colors'
 
 import { Navigation, PrivateRoute } from 'components'
 import { Login, Profile, Members, Learning, Subject, Calendar, UserSubject } from 'pages'
@@ -53,6 +53,9 @@ const App: FC = () => {
       createMuiTheme({
         palette: {
           primary: isDarkMode ? blueGrey : blue,
+          grey: {
+            100: isDarkMode ? blueGrey[300] : grey[100],
+          },
           type: isDarkMode ? 'dark' : 'light',
         },
       }),
