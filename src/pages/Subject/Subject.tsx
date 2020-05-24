@@ -309,11 +309,13 @@ const Subject: FC = () => {
   }
 
   function compareDates(dateOne: Date, dateTwo: Date) {
-    if (dateOne.getFullYear() < dateTwo.getFullYear()) return false
-    if (dateOne.getMonth() < dateTwo.getMonth() && dateOne.getFullYear() === dateTwo.getFullYear())
+    if (dateOne.getFullYear() > dateTwo.getFullYear()) return false
+
+    if (dateOne.getMonth() > dateTwo.getMonth() && dateOne.getFullYear() === dateTwo.getFullYear())
       return false
+
     if (
-      dateOne.getDay() < dateTwo.getDay() &&
+      dateOne.getDate() > dateTwo.getDate() &&
       dateOne.getMonth() === dateTwo.getMonth() &&
       dateOne.getFullYear() === dateTwo.getFullYear()
     )
@@ -408,15 +410,15 @@ const Subject: FC = () => {
     if (
       !startDate ||
       !endDate ||
-      !compareDates(startDate, new Date()) ||
-      !compareDates(endDate, new Date())
+      !compareDates(new Date(), startDate) ||
+      !compareDates(new Date(), endDate)
     ) {
       setError('Selected date cannot be in the past')
 
       return
     }
 
-    if (!compareDates(endDate, startDate)) {
+    if (!compareDates(startDate, endDate)) {
       setError('End date cannot be before start date')
 
       return
@@ -427,22 +429,28 @@ const Subject: FC = () => {
     if (response?.status !== 204) setError('Something went wrong')
 
     setIsSelectUserModalOpen(false)
+    setError(null)
   }
 
   async function assignSubjectToYourself() {
+    if (!user) {
+      setError('No user')
+
+      return
+    }
+
     if (
-      !user ||
       !startDate ||
       !endDate ||
-      !compareDates(startDate, new Date()) ||
-      !compareDates(endDate, new Date())
+      !compareDates(new Date(), startDate) ||
+      !compareDates(new Date(), endDate)
     ) {
       setError('Selected date cannot be in the past')
 
       return
     }
 
-    if (!compareDates(endDate, startDate)) {
+    if (!compareDates(startDate, endDate)) {
       setError('End date cannot be before start date')
 
       return
@@ -453,6 +461,7 @@ const Subject: FC = () => {
     if (response?.status !== 204) setError('Something went wrong')
 
     setIsLearnModalOpen(false)
+    setError(null)
   }
 
   const handleDateChange = (date: Date | null) => {
