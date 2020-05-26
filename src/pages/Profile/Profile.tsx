@@ -171,8 +171,9 @@ const Profile: FC = () => {
   }
 
   function renderSubjectList() {
-    if (userSubjects !== null)
-      return (
+    if (!userSubjects) return null
+    
+    return (
         <GridList cellHeight={45} cols={1} className={classes.gridList}>
           {userSubjects.map(({ id: userSubjectId, subject, isLearned }) => (
             <GridListTile key={userSubjectId}>
@@ -181,7 +182,6 @@ const Profile: FC = () => {
           ))}
         </GridList>
       )
-    return null
   }
 
   function renderInsideTab() {
