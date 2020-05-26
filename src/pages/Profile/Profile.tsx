@@ -19,9 +19,12 @@ import { useParams, Link } from 'react-router-dom'
 
 import { getUserSubjects } from 'data/api/subjects'
 import { getUser } from 'data/api/users'
+import { getTeamById } from 'data/api/teams'
+
 import { Subject, UserSubject as UserSubjectType } from 'types/models/subject'
 import { USER_SUBJECT } from 'constants/routes'
 import { User as UserType, UserRole } from 'types/models/user'
+import { Team } from 'types/models/team'
 
 import { UserContext } from 'App'
 
@@ -35,6 +38,7 @@ const Profile: FC = () => {
   const [isCurrentUser, setIsCurrentUser] = useState<boolean>(!id)
   const currentUser = useContext(UserContext)
   const [user, setUser] = useState<UserType | null>(null)
+  const [team, setTeam] = useState<Team | null>(null)
 
   const fetchUser = useCallback(async () => {
     if (!id) {
@@ -66,6 +70,19 @@ const Profile: FC = () => {
   useEffect(() => {
     fetchUserSubjects()
   }, [fetchUserSubjects])
+
+  useEffect(() => {
+    async function fetchTeam() {
+      if (!user?.teamId) return
+      const fetchedTeam = await getTeamById(user.teamId)
+
+      if (!fetchedTeam) return
+
+      setTeam(fetchedTeam)
+    }
+
+    fetchTeam()
+  }, [user])
 
   function renderTitle() {
     const userProfile = `${user?.firstName} ${user?.lastName} Profile`
@@ -128,7 +145,7 @@ const Profile: FC = () => {
         {renderSectionTitle('Role')}
         {renderSectionBody(getUserRoleString(user.role))}
         {renderSectionTitle('Team Name')}
-        {renderSectionBody(user.team?.name || 'User has no team')}
+        {renderSectionBody(team?.name || 'User has no team')}
         {renderEditButton()}
       </>
     )
