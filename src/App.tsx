@@ -98,14 +98,14 @@ const App: FC = () => {
             <PrivateRoute isLoggedOn={isLoggedOn} path={routes.CALENDAR}>
               <Calendar />
             </PrivateRoute>
-            <PrivateRoute isLoggedOn={isLoggedOn} path={routes.HOME}>
-              <Calendar />
-            </PrivateRoute>
             <PrivateRoute isLoggedOn={isLoggedOn} path={routes.USER}>
               <Profile />
             </PrivateRoute>
             <PrivateRoute isLoggedOn={isLoggedOn} path={routes.TEAM}>
               <Team />
+            </PrivateRoute>
+            <PrivateRoute isLoggedOn={isLoggedOn} path={routes.HOME}>
+              <Calendar />
             </PrivateRoute>
           </Switch>
         </Router>

@@ -15,12 +15,13 @@ import {
   GridListTile,
 } from '@material-ui/core'
 
-import { useParams } from 'react-router-dom'
+import { useParams, Link } from 'react-router-dom'
 
 import { getUserSubjects } from 'data/api/subjects'
 import { getUser } from 'data/api/users'
 import { Subject, UserSubject as UserSubjectType } from 'types/models/subject'
-import { User as UserType } from 'types/models/user'
+import { USER_SUBJECT } from 'constants/routes'
+import { User as UserType, UserRole } from 'types/models/user'
 
 import { UserContext } from 'App'
 
@@ -31,19 +32,22 @@ const Profile: FC = () => {
   const classes = useStyles()
   const [value, setValue] = useState(0)
   const [userSubjects, setUserSubjects] = useState<Array<UserSubjectType> | null>(null)
-  const [isCurrentUser, setIsCurrentUser] = useState<boolean>(true)
+  const [isCurrentUser, setIsCurrentUser] = useState<boolean>(!id)
   const currentUser = useContext(UserContext)
-  const [user, setUser] = useState<UserType | null>(currentUser)
+  const [user, setUser] = useState<UserType | null>(null)
 
   const fetchUser = useCallback(async () => {
-    if (!id) return
+    if (!id) {
+      setUser(currentUser)
+      return
+    }
     const idInt = parseInt(id, 10)
     const fetchUserById = await getUser(idInt)
     setIsCurrentUser(false)
 
     if (!fetchUserById) return
     setUser(fetchUserById)
-  }, [id])
+  }, [id, currentUser])
 
   useEffect(() => {
     fetchUser()
@@ -64,7 +68,7 @@ const Profile: FC = () => {
   }, [fetchUserSubjects])
 
   function renderTitle() {
-    const userProfile = user?.firstName + ' ' + user?.lastName + ' Profile'
+    const userProfile = `${user?.firstName} ${user?.lastName} Profile`
     return (
       <Typography component="h1" variant="h5">
         {isCurrentUser ? 'My Profile' : userProfile}
@@ -102,24 +106,32 @@ const Profile: FC = () => {
     return <Chip className={classes.editButton} color="primary" label="Edit Info" />
   }
 
+  function getUserRoleString(role: number) {
+    if (role === UserRole.Mid) return 'Mid'
+    if (role === UserRole.Senior) return 'Senior'
+    if (role === UserRole.TeamLead) return 'TeamLead'
+    if (role === UserRole.God) return 'God'
+    return 'Junior'
+  }
+
   function renderBasicInfo() {
-    if (user !== null)
-      return (
-        <>
-          {renderSectionTitle('First Name')}
-          {renderSectionBody(user.firstName)}
-          {renderSectionTitle('Last Name')}
-          {renderSectionBody(user.lastName)}
-          {renderSectionTitle('Email')}
-          {renderSectionBody(user.email)}
-          {renderSectionTitle('Role')}
-          {renderSectionBody(user.role.toString())}
-          {renderSectionTitle('Team Name')}
-          {renderSectionBody(user.teamId?.toString())}
-          {renderEditButton()}
-        </>
-      )
-    return null
+    if (!user) return null
+
+    return (
+      <>
+        {renderSectionTitle('First Name')}
+        {renderSectionBody(user.firstName)}
+        {renderSectionTitle('Last Name')}
+        {renderSectionBody(user.lastName)}
+        {renderSectionTitle('Email')}
+        {renderSectionBody(user.email)}
+        {renderSectionTitle('Role')}
+        {renderSectionBody(getUserRoleString(user.role))}
+        {renderSectionTitle('Team Name')}
+        {renderSectionBody(user.team?.name || 'User has no team')}
+        {renderEditButton()}
+      </>
+    )
   }
 
   function renderTabs() {
@@ -139,17 +151,26 @@ const Profile: FC = () => {
     )
   }
 
-  function renderChip(subject: Subject, isLearned: boolean) {
-    if (isLearned) return <Chip color="primary" label={subject.title} className={classes.subject} />
-    return <Chip color="secondary" label={subject.title} className={classes.subject} />
+  function renderChip(subject: Subject, isLearned: boolean, userSubjectId: number) {
+    return (
+      <Link to={USER_SUBJECT.replace(':id', userSubjectId.toString())}>
+        <Chip
+          color={isLearned ? 'primary' : 'secondary'}
+          label={subject.title}
+          className={classes.subject}
+        />
+      </Link>
+    )
   }
 
   function renderSubjectList() {
     if (userSubjects !== null)
       return (
         <GridList cellHeight={45} cols={1} className={classes.gridList}>
-          {userSubjects.map(({ subject, isLearned }) => (
-            <GridListTile key={subject.id}>{renderChip(subject, isLearned)}</GridListTile>
+          {userSubjects.map(({ id: userSubjectId, subject, isLearned }) => (
+            <GridListTile key={userSubjectId}>
+              {renderChip(subject, isLearned, userSubjectId)}
+            </GridListTile>
           ))}
         </GridList>
       )
