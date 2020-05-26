@@ -107,11 +107,18 @@ const Profile: FC = () => {
   }
 
   function getUserRoleString(role: number) {
-    if (role === UserRole.Mid) return 'Mid'
-    if (role === UserRole.Senior) return 'Senior'
-    if (role === UserRole.TeamLead) return 'TeamLead'
-    if (role === UserRole.God) return 'God'
-    return 'Junior'
+  switch (role) {
+    case UserRole.Mid:
+        return 'Mid'
+     case UserRole.Senior:
+        return 'Senior'
+     case UserRole.TeamLead:
+        return 'TeamLead'
+     case UserRole.God:
+        return 'God'
+      default:
+        return 'Junior'
+  }
   }
 
   function renderBasicInfo() {
