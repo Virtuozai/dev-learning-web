@@ -4,7 +4,17 @@ import { CssBaseline, ThemeProvider, createMuiTheme } from '@material-ui/core'
 import { blueGrey, blue, grey } from '@material-ui/core/colors'
 
 import { Navigation, PrivateRoute } from 'components'
-import { Login, Profile, Members, Learning, Subject, Calendar, UserSubject, Team } from 'pages'
+import {
+  Login,
+  Profile,
+  Members,
+  Learning,
+  Subject,
+  Calendar,
+  UserSubject,
+  Team,
+  SettingsPage,
+} from 'pages'
 
 import { getCurrentUser } from 'data/api/users'
 
@@ -103,6 +113,9 @@ const App: FC = () => {
             </PrivateRoute>
             <PrivateRoute isLoggedOn={isLoggedOn} path={routes.TEAM}>
               <Team />
+            </PrivateRoute>
+            <PrivateRoute isLoggedOn={isLoggedOn} path={routes.SETTINGS}>
+              <SettingsPage />
             </PrivateRoute>
             <PrivateRoute isLoggedOn={isLoggedOn} path={routes.HOME}>
               <Calendar />

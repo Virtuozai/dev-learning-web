@@ -22,6 +22,16 @@ export const getUser = async (id: number) => {
   }
 }
 
+export const updateUser = async (obj: User) => {
+  try {
+    const response = await api.put<User>(USER_API_ENDPOINT.replace(':id', obj.id.toString()), obj)
+
+    return response
+  } catch (ex) {
+    return null
+  }
+}
+
 export const getUserCalendar = async (id: number) => {
   try {
     const response = await api.get<Array<Calendar>>(
