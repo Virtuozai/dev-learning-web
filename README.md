@@ -1,6 +1,6 @@
 # dev-learning-web
 
-Simple learning [React](https://reactjs.org/docs/getting-started.html) web application designed to help developers trying to learn new programming related topics.
+[React](https://reactjs.org/docs/getting-started.html) web application designed to help developers trying to learn new programming related topics.
 Uses [material-ui](https://material-ui.com/) design system and the newest React provided utils.
 
 ## Getting Started
