@@ -223,8 +223,9 @@ const Navigation: FC<Props> = ({ checkIfLoggedOn, isDarkMode, checkIfDarkMode }:
       <AppBar position="static">
         <Toolbar>
           <Typography className={classes.title} variant="h6" noWrap>
-            Dev learning
+            <Link to={routes.HOME}>Dev learning</Link>
           </Typography>
+
           {renderMenu()}
         </Toolbar>
       </AppBar>
