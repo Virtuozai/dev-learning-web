@@ -7,4 +7,10 @@ export const useStyles = makeStyles(theme => ({
   after: {
     marginBottom: theme.spacing(2),
   },
+  between: {
+    margin: theme.spacing(2),
+  },
+  betweenBlocks: {
+    marginBottom: theme.spacing(2),
+  },
 }))
