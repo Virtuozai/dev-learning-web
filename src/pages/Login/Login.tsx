@@ -1,5 +1,6 @@
 import React, { FC, useState, FormEvent, ChangeEvent } from 'react'
 import { useHistory } from 'react-router-dom'
+import { AxiosResponse } from 'axios'
 import {
   Avatar,
   Button,
@@ -16,11 +17,12 @@ import { Alert } from '@material-ui/lab'
 import { LEARNING } from 'constants/routes'
 
 import { login, register } from 'data/api/users'
+import { User } from 'types/models/user'
 
 import { useStyles } from './styles'
 
 type Props = {
-  checkIfLoggedOn: () => void
+  checkIfLoggedOn: () => Promise<AxiosResponse<User> | null>
 }
 
 const Login: FC<Props> = ({ checkIfLoggedOn }: Props) => {

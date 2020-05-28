@@ -53,3 +53,9 @@
 .u-position-absolute {
   position: absolute;
 }
+
+.u-text-truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
