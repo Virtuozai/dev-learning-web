@@ -59,9 +59,7 @@ export const useStyles = makeStyles(theme => ({
   subject: {
     margin: theme.spacing(0, 4),
   },
-  editButton: {
-    maxWidth: 100,
-    display: 'Flex',
-    alignSelf: 'center',
+  alignRight: {
+    marginLeft: 'auto',
   },
 }))

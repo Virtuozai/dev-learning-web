@@ -1,5 +1,5 @@
 import React, { FC, useCallback, useState, useContext, useEffect } from 'react'
-
+import { useParams, Link } from 'react-router-dom'
 import {
   Tab,
   Typography,
@@ -13,16 +13,16 @@ import {
   Chip,
   GridList,
   GridListTile,
+  Button,
 } from '@material-ui/core'
-
-import { useParams, Link } from 'react-router-dom'
+import { Edit } from '@material-ui/icons'
 
 import { getUserSubjects } from 'data/api/subjects'
 import { getUser } from 'data/api/users'
 import { getTeamById } from 'data/api/teams'
 
 import { Subject, UserSubject as UserSubjectType } from 'types/models/subject'
-import { USER_SUBJECT } from 'constants/routes'
+import { USER_SUBJECT, SETTINGS } from 'constants/routes'
 import { User as UserType, UserRole } from 'types/models/user'
 import { Team } from 'types/models/team'
 
@@ -120,7 +120,13 @@ const Profile: FC = () => {
   function renderEditButton() {
     if (!isCurrentUser) return null
 
-    return <Chip className={classes.editButton} color="primary" label="Edit Info" />
+    return (
+      <Link className={classes.alignRight} to={SETTINGS}>
+        <Button variant="outlined" startIcon={<Edit />} color="primary">
+          Edit info
+        </Button>
+      </Link>
+    )
   }
 
   function getUserRoleString(role: number) {
