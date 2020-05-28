@@ -51,4 +51,17 @@ export const useStyles = makeStyles(theme => ({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  gridList: {
+    width: 400,
+    height: 550,
+    alignContent: 'flex-start',
+  },
+  subject: {
+    margin: theme.spacing(0, 4),
+  },
+  editButton: {
+    maxWidth: 100,
+    display: 'Flex',
+    alignSelf: 'center',
+  },
 }))

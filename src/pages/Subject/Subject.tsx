@@ -1,5 +1,5 @@
 import React, { FC, useState, useEffect, ChangeEvent, useCallback, useContext } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, Link } from 'react-router-dom'
 import {
   Typography,
   TextField,
@@ -30,6 +30,7 @@ import { getTeamUsers, addSubjectToUser } from 'data/api/users'
 import { Subject as SubjectType } from 'types/models/subject'
 import { Comment } from 'types/models/comment'
 import { UserRole, User } from 'types/models/user'
+import { USER } from 'constants/routes'
 
 import { UserContext } from 'App'
 
@@ -238,9 +239,11 @@ const Subject: FC = () => {
         key={commentId}
       >
         <Grid item xs={12} sm={1}>
-          <Avatar className={classes.betweenBlocks}>
-            {commentUser.firstName[0] + commentUser.lastName[0]}
-          </Avatar>
+          <Link to={USER.replace(':id', commentUser.id.toString())}>
+            <Avatar className={classes.betweenBlocks}>
+              {commentUser.firstName[0] + commentUser.lastName[0]}
+            </Avatar>
+          </Link>
         </Grid>
         <Grid item xs={11} sm={10}>
           <Card className={classes.broaderPadding}>

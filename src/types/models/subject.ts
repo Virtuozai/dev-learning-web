@@ -7,6 +7,7 @@ export type Subject = {
 
 export type UserSubject = {
   id: number
+  userId: number
   subjectId: number
   isLearned: boolean
   endDateTime: Date
