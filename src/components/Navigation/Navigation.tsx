@@ -1,5 +1,6 @@
 import React, { FC, MouseEvent, useState } from 'react'
 import { Link, useHistory } from 'react-router-dom'
+import { AxiosResponse } from 'axios'
 import {
   AppBar,
   Toolbar,
@@ -13,6 +14,7 @@ import {
 import { Menu as MenuIcon, AccountCircle, LocalLibrary, Event, People } from '@material-ui/icons'
 
 import { logout } from 'data/api/users'
+import { User } from 'types/models/user'
 
 import * as routes from 'constants/routes'
 
@@ -21,7 +23,7 @@ import { setItem } from 'libs/utils/localStorageManager'
 import { useStyles } from './styles'
 
 type Props = {
-  checkIfLoggedOn: () => void
+  checkIfLoggedOn: () => Promise<AxiosResponse<User> | null>
   isDarkMode: boolean
   checkIfDarkMode: () => void
 }

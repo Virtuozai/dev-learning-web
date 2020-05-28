@@ -1,193 +1,157 @@
-import React, { FC, useContext, useState } from 'react'
+import React, { FC, useContext, useState, useEffect, ChangeEvent } from 'react'
+import { AxiosResponse } from 'axios'
 import { Alert } from '@material-ui/lab'
+import { Container, Paper, Grid, Typography, TextField, Button } from '@material-ui/core'
 
-import { Container, Paper, Grid, Typography, TextField, Tabs, Tab, Chip } from '@material-ui/core'
 import { updateUser } from 'data/api/users'
+import { User } from 'types/models/user'
 
 import { UserContext } from 'App'
 
 import { useStyles } from './styles'
 
-const SettingsPage: FC = () => {
+type Props = {
+  fetchUser: () => Promise<AxiosResponse<User> | null>
+}
+
+const Settings: FC<Props> = ({ fetchUser }: Props) => {
   const classes = useStyles()
 
-  const [value, setValue] = useState(0)
-
   const user = useContext(UserContext)
+
+  const [editedUser, setEditedUser] = useState<User | null>(null)
+
+  useEffect(() => {
+    setEditedUser(user)
+  }, [user])
+
   const [error, setError] = useState<string | null>(null)
-  const editedUser = useContext(UserContext)
 
   function renderTitle() {
     const titleText = `Settings`
 
     return (
-      <Typography variant="h3" align="center">
+      <Typography className={classes.after} variant="h3" align="center">
         {titleText}
       </Typography>
     )
   }
 
-  function renderLabel(text: string) {
-    return <Typography variant="h4">{text}</Typography>
+  const handleNameChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const {
+      target: { value },
+    } = event
+
+    if (!editedUser) return
+
+    setEditedUser(prevState => {
+      if (!prevState) return null
+
+      return { ...prevState, firstName: value }
+    })
   }
 
-  const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleLastNameChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const {
+      target: { value },
+    } = event
+
     if (!editedUser) return
-    editedUser.firstName = event.target.value
+
+    setEditedUser(prevState => {
+      if (!prevState) return null
+
+      return { ...prevState, lastName: value }
+    })
   }
 
-  const handleLastNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (!editedUser) return
-    editedUser.lastName = event.target.value
-  }
+  const handleEmailChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const {
+      target: { value },
+    } = event
 
-  const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!editedUser) return
-    editedUser.email = event.target.defaultValue
+
+    setEditedUser(prevState => {
+      if (!prevState) return null
+
+      return { ...prevState, email: value }
+    })
   }
 
   const updateUserInfo = async () => {
     setError(null)
 
     if (!editedUser) return
+
     const response = await updateUser(editedUser)
 
     if (response?.status !== 204) {
       setError('Something went wrong')
-    } else {
-      window.location.reload(false)
+
+      return
     }
+
+    await fetchUser()
   }
 
   function renderBasicInfo() {
-    if (!user) return null
+    if (!editedUser) return null
 
     return (
       <>
-        <form>
-          <div className={classes.input}>
-            {renderLabel('First Name')}
-            <TextField
-              className={classes.textField}
-              id="First_name_edit"
-              label={user.firstName}
-              variant="outlined"
-              onChange={handleNameChange}
-            />
-          </div>
+        <TextField
+          className={classes.after}
+          label="First name"
+          fullWidth
+          value={editedUser.firstName}
+          variant="outlined"
+          onChange={handleNameChange}
+        />
+        <TextField
+          className={classes.after}
+          label="Last name"
+          fullWidth
+          value={editedUser.lastName}
+          variant="outlined"
+          onChange={handleLastNameChange}
+        />
+        <TextField
+          className={classes.after}
+          label="Email"
+          fullWidth
+          value={editedUser.email}
+          variant="outlined"
+          onChange={handleEmailChange}
+        />
 
-          <div className={classes.input}>
-            {renderLabel('Last Name')}
-            <TextField
-              className={classes.textField}
-              id="Last_name_edit"
-              label={user.lastName}
-              variant="outlined"
-              onChange={handleLastNameChange}
-            />
-          </div>
-          <div className={classes.input}>
-            {renderLabel('Email')}
-            <TextField
-              className={classes.textField}
-              id="Email_edit"
-              label={user.email}
-              variant="outlined"
-              onChange={handleEmailChange}
-            />
-          </div>
-          <Chip
-            color="primary"
-            size="small"
-            label="Update"
-            className={classes.chip}
-            onClick={updateUserInfo}
-          />
-        </form>
-      </>
-    )
-  }
-
-  function renderTabs() {
-    return (
-      <Paper>
-        <Tabs
-          value={value}
-          onChange={(event, newValue) => setValue(newValue)}
-          indicatorColor="primary"
-          textColor="primary"
-          variant="fullWidth"
+        <Button
+          className={classes.after}
+          color="primary"
+          size="large"
+          variant="contained"
+          onClick={updateUserInfo}
         >
-          <Tab label="Public Info" />
-          <Tab label="Change Password" />
-        </Tabs>
-      </Paper>
-    )
-  }
-  function renderChangePasword() {
-    if (!user) return null
-
-    return (
-      <>
-        <form>
-          <div className={classes.input}>
-            {renderLabel('Old Password')}
-
-            <TextField
-              className={classes.textField}
-              type="password"
-              id="User_change_pass"
-              variant="outlined"
-            />
-          </div>
-          <div className={classes.input}>
-            {renderLabel('NewPassword')}
-
-            <TextField
-              className={classes.textField}
-              type="password"
-              id="User_change_pass"
-              variant="outlined"
-            />
-          </div>
-          <div className={classes.input}>
-            {renderLabel('Repeat Password')}
-
-            <TextField
-              className={classes.textField}
-              type="password"
-              id="User_change_pass"
-              variant="outlined"
-            />
-          </div>
-          <Chip color="primary" size="small" label="Update" className={classes.chip} />
-        </form>
+          Update
+        </Button>
       </>
     )
-  }
-
-  function renderInsideTabs() {
-    if (value === 0) return renderBasicInfo()
-    return renderChangePasword()
   }
 
   return (
-    <>
-      <Container maxWidth="sm">
-        <Paper elevation={6}>
-          {renderTitle()}
-          {renderTabs()}
-          <Grid container className={classes.info}>
-            <Grid item>{renderInsideTabs()}</Grid>
-          </Grid>
-        </Paper>
-        {error && (
-          <Alert variant="filled" severity="error">
-            {error}
-          </Alert>
-        )}
-      </Container>
-    </>
+    <Container>
+      <Paper elevation={6}>
+        {renderTitle()}
+        <Grid className={classes.horizontal} container justify="center">
+          {renderBasicInfo()}
+        </Grid>
+      </Paper>
+      {error && (
+        <Alert variant="filled" severity="error">
+          {error}
+        </Alert>
+      )}
+    </Container>
   )
 }
-export default SettingsPage
+export default Settings

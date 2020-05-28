@@ -13,13 +13,14 @@ import {
   Calendar,
   UserSubject,
   Team,
-  SettingsPage,
+  Settings,
 } from 'pages'
 
 import { getCurrentUser } from 'data/api/users'
+import { User } from 'types/models/user'
 
 import * as routes from 'constants/routes'
-import { User } from 'types/models/user'
+
 import { getItem } from 'libs/utils/localStorageManager'
 
 export const UserContext = createContext<User | null>(null)
@@ -115,7 +116,7 @@ const App: FC = () => {
               <Team />
             </PrivateRoute>
             <PrivateRoute isLoggedOn={isLoggedOn} path={routes.SETTINGS}>
-              <SettingsPage />
+              <Settings fetchUser={checkIfLoggedOn} />
             </PrivateRoute>
             <PrivateRoute isLoggedOn={isLoggedOn} path={routes.HOME}>
               <Calendar />
