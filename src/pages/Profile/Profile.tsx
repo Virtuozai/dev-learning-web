@@ -124,11 +124,18 @@ const Profile: FC = () => {
   }
 
   function getUserRoleString(role: number) {
-    if (role === UserRole.Mid) return 'Mid'
-    if (role === UserRole.Senior) return 'Senior'
-    if (role === UserRole.TeamLead) return 'TeamLead'
-    if (role === UserRole.God) return 'God'
-    return 'Junior'
+    switch (role) {
+      case UserRole.Mid:
+        return 'Mid'
+      case UserRole.Senior:
+        return 'Senior'
+      case UserRole.TeamLead:
+        return 'TeamLead'
+      case UserRole.God:
+        return 'God'
+      default:
+        return 'Junior'
+    }
   }
 
   function renderBasicInfo() {
@@ -181,17 +188,17 @@ const Profile: FC = () => {
   }
 
   function renderSubjectList() {
-    if (userSubjects !== null)
-      return (
-        <GridList cellHeight={45} cols={1} className={classes.gridList}>
-          {userSubjects.map(({ id: userSubjectId, subject, isLearned }) => (
-            <GridListTile key={userSubjectId}>
-              {renderChip(subject, isLearned, userSubjectId)}
-            </GridListTile>
-          ))}
-        </GridList>
-      )
-    return null
+    if (!userSubjects) return null
+
+    return (
+      <GridList cellHeight={45} cols={1} className={classes.gridList}>
+        {userSubjects.map(({ id: userSubjectId, subject, isLearned }) => (
+          <GridListTile key={userSubjectId}>
+            {renderChip(subject, isLearned, userSubjectId)}
+          </GridListTile>
+        ))}
+      </GridList>
+    )
   }
 
   function renderInsideTab() {
