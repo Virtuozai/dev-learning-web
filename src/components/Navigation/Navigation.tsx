@@ -1,4 +1,4 @@
-import React, { FC, MouseEvent, useState } from 'react'
+import React, { FC, MouseEvent, useState, useContext } from 'react'
 import { Link, useHistory } from 'react-router-dom'
 import { AxiosResponse } from 'axios'
 import {
@@ -11,7 +11,14 @@ import {
   Badge,
   Switch,
 } from '@material-ui/core'
-import { Menu as MenuIcon, AccountCircle, LocalLibrary, Event, People } from '@material-ui/icons'
+import {
+  Menu as MenuIcon,
+  AccountCircle,
+  LocalLibrary,
+  Event,
+  People,
+  SupervisedUserCircle,
+} from '@material-ui/icons'
 
 import { logout } from 'data/api/users'
 import { User } from 'types/models/user'
@@ -19,6 +26,8 @@ import { User } from 'types/models/user'
 import * as routes from 'constants/routes'
 
 import { setItem } from 'libs/utils/localStorageManager'
+
+import { UserContext } from 'App'
 
 import { useStyles } from './styles'
 
@@ -31,6 +40,8 @@ type Props = {
 const Navigation: FC<Props> = ({ checkIfLoggedOn, isDarkMode, checkIfDarkMode }: Props) => {
   const classes = useStyles()
 
+  const currentUser = useContext(UserContext)
+
   const history = useHistory()
 
   const [anchorEl, setAnchorEl] = useState<Element | null>(null)
@@ -38,6 +49,8 @@ const Navigation: FC<Props> = ({ checkIfLoggedOn, isDarkMode, checkIfDarkMode }:
 
   const isMenuOpen = Boolean(anchorEl)
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl)
+
+  const isUserWithTeam = !!currentUser?.teamId
 
   const handleProfileMenuOpen = (event: MouseEvent<HTMLLIElement | HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget)
@@ -76,10 +89,15 @@ const Navigation: FC<Props> = ({ checkIfLoggedOn, isDarkMode, checkIfDarkMode }:
         <Link to={routes.PROFILE}>
           <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
         </Link>
-
         <Link to={routes.SETTINGS}>
           <MenuItem onClick={handleMenuClose}>Settings</MenuItem>
         </Link>
+
+        {isUserWithTeam && (
+          <Link to={routes.TEAM.replace(':id', currentUser?.teamId?.toString() as string)}>
+            <MenuItem onClick={handleMenuClose}>My team</MenuItem>
+          </Link>
+        )}
 
         <MenuItem onClick={handleLogout}>Log out</MenuItem>
       </Menu>
@@ -162,6 +180,16 @@ const Navigation: FC<Props> = ({ checkIfLoggedOn, isDarkMode, checkIfDarkMode }:
               </Badge>
             </IconButton>
           </Link>
+
+          {isUserWithTeam && (
+            <Link to={routes.TEAM.replace(':id', currentUser?.teamId?.toString() as string)}>
+              <IconButton className={classes.iconButton}>
+                <Badge color="secondary">
+                  <SupervisedUserCircle />
+                </Badge>
+              </IconButton>
+            </Link>
+          )}
 
           <IconButton edge="end" onClick={handleProfileMenuOpen} className={classes.iconButton}>
             <AccountCircle />
