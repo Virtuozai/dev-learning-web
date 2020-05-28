@@ -153,6 +153,7 @@ const Subject: FC = () => {
 
     if (response?.status !== 204) {
       setError('Something went wrong')
+
       return
     }
 
@@ -432,6 +433,9 @@ const Subject: FC = () => {
       return
     }
 
+    startDate.setHours(12)
+    endDate.setHours(12)
+
     const response = await addSubjectToUser(selectedTeamUserId, Number(id), startDate, endDate)
 
     if (response?.status !== 204) {
@@ -468,6 +472,9 @@ const Subject: FC = () => {
       return
     }
 
+    startDate.setHours(12)
+    endDate.setHours(12)
+
     const response = await addSubjectToUser(user.id, Number(id), startDate, endDate)
 
     if (response?.status !== 204) {
@@ -481,10 +488,14 @@ const Subject: FC = () => {
   }
 
   const handleDateChange = (date: Date | null) => {
+    if (!date) return
+
     setStartDate(date)
   }
 
   const handleEndDateChange = (date: Date | null) => {
+    if (!date) return
+
     setEndDate(date)
   }
 
@@ -559,11 +570,6 @@ const Subject: FC = () => {
             Assign
           </Button>
         </Container>
-        {error && (
-          <Alert variant="filled" severity="error">
-            {error}
-          </Alert>
-        )}
       </Dialog>
     )
   }
@@ -619,11 +625,6 @@ const Subject: FC = () => {
             Learn
           </Button>
         </Container>
-        {error && (
-          <Alert variant="filled" severity="error">
-            {error}
-          </Alert>
-        )}
       </Dialog>
     )
   }
