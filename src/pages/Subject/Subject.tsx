@@ -153,11 +153,12 @@ const Subject: FC = () => {
 
     if (response?.status !== 204) {
       setError('Something went wrong')
-    } else {
-      await fetchSubject()
-
-      setIsEditing(false)
+      return
     }
+
+    await fetchSubject()
+
+    setIsEditing(false)
   }
 
   function renderTitle() {
@@ -433,7 +434,11 @@ const Subject: FC = () => {
 
     const response = await addSubjectToUser(selectedTeamUserId, Number(id), startDate, endDate)
 
-    if (response?.status !== 204) setError('Something went wrong')
+    if (response?.status !== 204) {
+      setError('Something went wrong')
+
+      return
+    }
 
     setIsSelectUserModalOpen(false)
     setError(null)
@@ -465,7 +470,11 @@ const Subject: FC = () => {
 
     const response = await addSubjectToUser(user.id, Number(id), startDate, endDate)
 
-    if (response?.status !== 204) setError('Something went wrong')
+    if (response?.status !== 204) {
+      setError('Something went wrong')
+
+      return
+    }
 
     setIsLearnModalOpen(false)
     setError(null)

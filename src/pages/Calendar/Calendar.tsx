@@ -96,7 +96,13 @@ const Calendar: FC = () => {
 
   function renderTabs() {
     return (
-      <Tabs value={activeTab} indicatorColor="primary" textColor="primary" onChange={handleChange}>
+      <Tabs
+        variant="scrollable"
+        value={activeTab}
+        indicatorColor="primary"
+        textColor="primary"
+        onChange={handleChange}
+      >
         {calendars.map(({ item1 }) => (
           <Tab label={users.find(({ id }) => id === item1)?.email} key={item1} />
         ))}
