@@ -232,7 +232,7 @@ const Subject: FC = () => {
   }
 
   function renderComments() {
-    return comments.map(({ id: commentId, text, user: commentUser }) => (
+    return comments.map(({ id: commentId, text, user: commentUser, dateTime }) => (
       <Grid
         className={classes.between}
         container
@@ -264,14 +264,18 @@ const Subject: FC = () => {
                 </Fab>
               </>
             ) : (
-              <Typography>
-                {text}
-                {user?.id === commentUser.id && (
-                  <Fab className={classes.horizontal} size="small">
-                    <Edit onClick={handleCommentEditing(commentId)} />
-                  </Fab>
-                )}
-              </Typography>
+              <>
+                <Typography>
+                  {text}
+                  {user?.id === commentUser.id && (
+                    <Fab className={classes.horizontal} size="small">
+                      <Edit onClick={handleCommentEditing(commentId)} />
+                    </Fab>
+                  )}
+                </Typography>
+
+                <Typography variant="caption">{dateTime.replace('T', ' ')}</Typography>
+              </>
             )}
           </Card>
         </Grid>
