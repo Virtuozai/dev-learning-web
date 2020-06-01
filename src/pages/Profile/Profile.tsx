@@ -33,12 +33,17 @@ import { useStyles } from './styles'
 const Profile: FC = () => {
   const { id } = useParams()
   const classes = useStyles()
+
   const [value, setValue] = useState(0)
+
   const [userSubjects, setUserSubjects] = useState<Array<UserSubjectType> | null>(null)
   const [isCurrentUser, setIsCurrentUser] = useState<boolean>(!id)
+
   const currentUser = useContext(UserContext)
   const [user, setUser] = useState<UserType | null>(null)
   const [team, setTeam] = useState<Team | null>(null)
+
+  const renderedSubjectTitles: Array<string> = []
 
   const fetchUser = useCallback(async () => {
     if (!id) {
@@ -198,17 +203,24 @@ const Profile: FC = () => {
 
     return (
       <GridList cellHeight={45} cols={1} className={classes.gridList}>
-        {userSubjects.map(({ id: userSubjectId, subject, isLearned }) => (
-          <GridListTile key={userSubjectId}>
-            {renderChip(subject, isLearned, userSubjectId)}
-          </GridListTile>
-        ))}
+        {userSubjects.reverse().map(({ id: userSubjectId, subject, isLearned }) => {
+          if (renderedSubjectTitles.includes(subject.title)) return null
+
+          renderedSubjectTitles.push(subject.title)
+
+          return (
+            <GridListTile key={userSubjectId}>
+              {renderChip(subject, isLearned, userSubjectId)}
+            </GridListTile>
+          )
+        })}
       </GridList>
     )
   }
 
   function renderInsideTab() {
     if (value === 0) return renderBasicInfo()
+
     return renderSubjectList()
   }
 
