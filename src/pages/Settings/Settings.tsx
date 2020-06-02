@@ -82,7 +82,23 @@ const Settings: FC<Props> = ({ fetchUser }: Props) => {
   const updateUserInfo = async () => {
     setError(null)
 
-    if (!editedUser) return
+    if (!editedUser?.firstName) {
+      setError('First name cannot be empty')
+
+      return
+    }
+
+    if (!editedUser?.lastName) {
+      setError('Last name cannot be empty')
+
+      return
+    }
+
+    if (!editedUser?.email) {
+      setError('Email cannot be empty')
+
+      return
+    }
 
     const response = await updateUser(editedUser)
 
